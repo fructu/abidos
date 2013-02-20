@@ -8,11 +8,7 @@ abidos_cpp and there is documentation in abidos_cpp_doc.
 
 So far there are 2 manuals in draft version:
 
-* user manual:
+* user manual: http://abidos-cpp.googlecode.com/files/abidos_cpp_user_manual_cover_draft_1_1.pdf
 
-http://abidos-cpp.googlecode.com/files/abidos_cpp_user_manual_cover_draft_1_1.pdf
-
-* programmer manual:
-
-http://abidos-cpp.googlecode.com/files/abidos_cpp_programmer_manual_cover_draft_1_1.pdf
+* programmer manual: http://abidos-cpp.googlecode.com/files/abidos_cpp_programmer_manual_cover_draft_1_1.pdf
 
