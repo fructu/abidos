@@ -1,0 +1,11 @@
+== Description
+
+So far i have work done in abidos cpp, and i started a little test with
+python to do abidos_py (not uploaded yet) therefore abidos cpp was been moved to
+abidos_cpp and there is documentation in abidos_cpp_doc.
+
+* You can get abidos_cpp in his new place  https://github.com/fructu/abidos_cpp
+
+* You can get abidos_cpp documentation in his new place
+  https://github.com/fructu/abidos_cpp_doc
+
