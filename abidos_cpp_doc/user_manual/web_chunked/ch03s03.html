@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>3.3. The hacker way Abidos toolchain explanation</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="index.html" title="Abidos C++ User Manual" /><link rel="up" href="ch03.html" title="Chapter 3. Abidos parsing" /><link rel="prev" href="ch03s02.html" title="3.2. The easy way parsing a set of C++ files" /><link rel="next" href="ch04.html" title="Chapter 4. Uninstall" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch03s02.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr /></div><div class="section" title="3.3. The hacker way Abidos toolchain explanation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_the_hacker_way_abidos_toolchain_explanation"></a>3.3. The hacker way Abidos toolchain explanation</h2></div></div></div><p>When you are going to parse a C++ project with Abidos, you need a special
+directory called <span class="strong"><strong>.abidos_cpp/</strong></span> in the same directory you have the <span class="strong"><strong>Makefile</strong></span>.</p><p>In order to work properly and parse successfully a C++ project abidos need be
+loaded with the file <span class="strong"><strong>.abidos_cpp/files_input</strong></span>, in this file each line is like:</p><pre class="screen">/home/.../src/main.cpp:/home/.../includes:/home/.../src
+/home/.../src/file1.cpp:/home/.../includes:/home/.../src</pre><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>"…" is to do not make more bloat the example.</p></td></tr></table></div><p>Those lines begin with a cpp file and are followed by some directories separated
+by <span class="strong"><strong>:</strong></span> symbol in this directories is where abidos search for a includes files.</p><p>Once abidos have parsed the whole project:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+All the files in <span class="strong"><strong>.abidos_cpp/files_input</strong></span>.
+</li><li class="listitem">
+The files includes in those cpp files.
+</li></ul></div><p>It generates <span class="strong"><strong>.abidos_cpp/files_output.dot</strong></span> which is a file in graphviz
+<a id="id354716" class="indexterm"></a> format.
+  <sup>[<a id="id347121" href="#ftn.id347121" class="footnote">1</a>]</sup></p><p>Now with <span class="strong"><strong>xdot_run.py</strong></span> based in xdot.py project
+  <sup>[<a id="id355465" href="#ftn.id355465" class="footnote">2</a>]</sup> you can look
+  <span class="strong"><strong>.abidos_cpp/files_output.dot</strong></span> graphviz <a id="id338707" class="indexterm"></a> format.
+  <a id="id355072" class="indexterm"></a>
+  <a id="id357262" class="indexterm"></a>
+  <a id="id348634" class="indexterm"></a></p><p>you will see a navigable window with a UML diagram of the C++ project.</p><p><span class="strong"><strong>abidos_make_process.pl</strong></span> would do all this things for you, but for now there is
+a lot of remaining work to do in this script:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+Analyzes <span class="strong"><strong>make_out.txt</strong></span> and generates <span class="strong"><strong>.abidos_cpp/files_input</strong></span>, it works when the
+  output of make process is like:
+</li></ul></div><pre class="screen">  cd /home/.../src &amp;&amp; /usr/bin/c++        \
+  -Wall -c -g -I/home/.../includes/       \
+    -o CMakeFiles/abidos_cpp.dir/main.cpp.o   \
+    -c /home/.../src/main.cpp</pre><pre class="literallayout">this line have been extracted from the make process of abidos itself, the
+Makefile have obtained from "cmake ." process.</pre><p><a id="id350962" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+It searches -c options to extract the cpp files.
+</li><li class="listitem">
+It searches -I options to extract the includes directories.
+</li><li class="listitem">
+It adds the directory of the cpp file too.
+</li></ul></div><p>This figure shows the whole process:</p><div class="informalfigure"><div class="mediaobject" align="center"><img src="images/chapter_abidos_parsing_abidos_flow_diagram_01.svg" align="middle" alt="images/chapter_abidos_parsing_abidos_flow_diagram_01.svg" /></div></div><p>to summarize the different parts of abidos have worked in the previous figure
+are:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+make_out.txt, is the output of make process.
+  <a id="id337852" class="indexterm"></a>
+</li><li class="listitem">
+abidos_make_process.pl parses the make_out.txt and generates
+  .abidos_cpp/files_input and executes abidos and xdot_run.py
+</li><li class="listitem">
+abidos load the cpp files from <span class="strong"><strong>.abidos_cpp/files_input</strong></span> then generates
+</li><li class="listitem">
+.abidos_cpp/file_output.dot*, this file has dot format.
+</li><li class="listitem">
+xdot_run.py load <span class="strong"><strong>.abidos_cpp/file_output.dot</strong></span> and show you to browse through the
+  UML diagram.
+  <a id="id364087" class="indexterm"></a>
+  <a id="id358274" class="indexterm"></a>
+  <a id="id356083" class="indexterm"></a>
+  <a id="id344602" class="indexterm"></a>
+</li></ul></div><p>When you have .abidos_cpp/file_output.dot generated you can launch the UML diagram
+whenever you want doing:</p><pre class="screen">  xdot_run.py/file_output.dot</pre><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>If you modified a C++ source file you would need to execute all the toolchain to
+ see the new changes.</p></td></tr></table></div><p>Now you have a deep knowledge about the abidos toolchain you can generate some
+parts of the toolchain by hand o by a script. You can write .abidos_cpp/files_input
+as you wish or you can comment some lines with <span class="strong"><strong>#</strong></span> to drop some files from abidos
+parsing process.</p><p>You can invoke abidos to process .abidos_cpp/files_input</p><pre class="screen">  abidos_cpp --out_dir .abidos --loader .abidos_cpp/files_input <a id="CO4-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO4-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+you can check if abidos worked looking if files_output.dot has been
+generated
+</p></td></tr></table></div><pre class="screen">    ls .abidos_cpp/
+    files_input  files_output.dot</pre><p>You can visualize the output of abidos</p><pre class="screen">  xdot_run.py .abidos_cpp/files_output.dot</pre><div class="footnotes"><br /><hr width="100" align="left" /><div class="footnote"><p><sup>[<a id="ftn.id347121" href="#id347121" class="simpara">1</a>] </sup>graphviz <a class="ulink" href="http://www.graphviz.org/" target="_top">http://www.graphviz.org/</a> a superb project to generate and
+  visualize graphs</p></div><div class="footnote"><p><sup>[<a id="ftn.id355465" href="#id355465" class="simpara">2</a>] </sup>xdot.py <a class="ulink" href="http://code.google.com/p/jrfonseca/wiki/XDot" target="_top">http://code.google.com/p/jrfonseca/wiki/XDot</a> with a little
+  hacking of my own <a class="ulink" href="http://code.google.com/p/xdot-multi-line" target="_top">http://code.google.com/p/xdot-multi-line</a></p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s02.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
