@@ -10,9 +10,7 @@ abidos_cpp and there is documentation in abidos_cpp_doc.
 
 ** user manual web: http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/index.html
 
-** user manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_user_manual_cover_draft_1_1.pdf
+** user manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_user_manual_draft_0.02.pdf
 
-** programmer manual web: http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_chunked/index.html
-
-** programmer manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_programmer_manual_cover_draft_1_1.pdf
+** user manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_user_manual_draft_0.02.pdf
 
