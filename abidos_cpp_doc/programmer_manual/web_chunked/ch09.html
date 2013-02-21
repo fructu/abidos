@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 9. Context</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="index.html" title="Abidos C++ Programmer Manual" /><link rel="prev" href="ch08.html" title="Chapter 8. Trace system" /><link rel="next" href="ch09s02.html" title="9.2. Parts of context" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch08.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch09s02.html">Next</a></td></tr></table><hr /></div><div class="chapter" title="Chapter 9. Context"><div class="titlepage"><div><div><h2 class="title"><a id="_context"></a>Chapter 9. Context</h2></div></div></div><p><a id="context"></a>Now you had a quick look about how parser works and you know about trace system,
+we can understand <span class="strong"><strong>Context</strong></span> that is a very important part of Abidos, in order
+to know the need of Context lets see some things Abidos needs to know when
+he is parsing a C++ project.</p><div class="section" title="9.1. How do context do it?"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_how_do_context_do_it"></a>9.1. How do context do it?</h2></div></div></div><p>We start with this example:</p><p title="test/book_02.cpp"><b>test/book_02.cpp. </b>
+</p><pre class="screen">int a1; <a id="CO21-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+
+class A
+{
+        int a2; <a id="CO21-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" />
+};</pre><p title="test/book_02.cpp">
+</p><p><a id="id567173" class="indexterm"></a></p><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO21-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+here a1 is a free variable declaration.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO21-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+a2 is a member variable of A class.
+</p></td></tr></table></div><p>When Abidos enters in a Class Scope he has to know that he is inside of a Class
+in all rules executed in that class, in the previous example How do Abidos know
+<span class="strong"><strong>a2</strong></span> is a member of <span class="strong"><strong>A class</strong></span> ?</p><p>To answers this question first take a look of the <span class="strong"><strong>annotated parse tree</strong></span> for
+this example.</p><p>We can see the <span class="strong"><strong>annotated parse tree</strong></span> writing in a console:</p><pre class="screen">make test_run
+xdot_run.py test_out/trace_book_02.cpp_urls_pruned.gv</pre><p><a id="id567244" class="indexterm"></a></p><p>You will see a tree like this:</p><div class="figure"><a id="id567256"></a><p class="title"><b>Figure 9.1. trace_book_02.cpp_urls_pruned</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_context_trace_book_02.cpp_urls_pruned.svg" align="middle" alt="images/chapter_context_trace_book_02.cpp_urls_pruned.svg" /></div></div></div><br class="figure-break" /><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+How Abidos parses <span class="strong"><strong>A</strong></span>
+</li></ul></div><p>When Abidos enters in <span class="strong"><strong>_71_class_specifier</strong></span> the context set the next value:</p><pre class="screen">int c_parser_descent::class_specifier(c_trace_node trace_node)
+{
+  ...
+  context.class_specifier_status = CLASS_SPECIFIER_STATUS_IDENTIFIER; <a id="CO22-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+  ...
+}</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO22-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+with this line Abidos knows he are inside of a Class scope.
+</p></td></tr></table></div><p>Later in the rule <span class="strong"><strong>_75_identifier</strong></span> Abidos parses <span class="strong"><strong>A</strong></span> identifier and calls</p><pre class="screen">int c_parser_descent::identifier(c_trace_node trace_node)
+{
+  ...
+  semantic.identifier(context, c_token_get());
+  ...
+}</pre><p>Semantic process it:</p><pre class="screen">void c_semantic::identifier(c_context &amp; context, c_token token)
+{
+    ...
+    if (CLASS_SPECIFIER_STATUS_IDENTIFIER ==
+            context.class_specifier_status) {
+        class_specifier_identifier(context, token); <a id="CO23-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+    }
+    ...
+}</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO23-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+by the <span class="strong"><strong>context</strong></span> knows <span class="strong"><strong>A</strong></span> is the name of a Class.
+</p></td></tr></table></div><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>context is a glue to join the knowledge of parser and semantic.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+When Abidos parses <span class="strong"><strong>a2</strong></span>
+</li></ul></div><p>first in _101_member_declaration context set:</p><pre class="screen">int c_parser_descent::member_declaration(c_trace_node trace_node)
+{
+    ...
+    context.class_specifier_status =
+        CLASS_SPECIFIER_STATUS_MEMBER_SPECIFIER;
+    ...
+    decl_specifier_seq_opt(trace_node); <a id="CO24-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+    ...
+    context.class_specifier_status =
+        CLASS_SPECIFIER_STATUS_MEMBER_DECLARATOR; <a id="CO24-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" />
+    ...
+}</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO24-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+this rule is to process the <span class="strong"><strong>int</strong></span> token.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO24-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+this state will be use by semantic.
+</p></td></tr></table></div><p>and when Abidos uses _109_identifier and this rule calls <span class="strong"><strong>semantic::identifier</strong></span>:</p><pre class="screen">    ...
+    if (CLASS_SPECIFIER_STATUS_MEMBER_DECLARATOR ==
+            context.class_specifier_status) {
+    ...
+            class_member_declarator(context, token); <a id="CO25-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+    ...</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO25-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+semantic process <span class="strong"><strong>a2</strong></span> like a member.
+</p></td></tr></table></div><p><span class="strong"><strong>A</strong></span> and <span class="strong"><strong>a2</strong></span> has been processed by the same rule <span class="strong"><strong>c_parser_descent::identifier</strong></span>
+but the context is the key for semantic can do his work, and put <span class="strong"><strong>A</strong></span> like a
+class in the symbols table and <span class="strong"><strong>a2</strong></span> like a a member of <span class="strong"><strong>A</strong></span>.</p><p>In this state machine we can see the states and the syntactic rules that change
+the states:</p><div class="figure"><a id="id567536"></a><p class="title"><b>Figure 9.2. state machine</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_context_class_specifier_status_01.svg" align="middle" alt="images/chapter_context_class_specifier_status_01.svg" /></div></div></div><br class="figure-break" /></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch08.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch09s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

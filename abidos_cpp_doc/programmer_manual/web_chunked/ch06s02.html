@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>6.2. Mangling classes</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="ch06.html" title="Chapter 6. Mangling" /><link rel="prev" href="ch06.html" title="Chapter 6. Mangling" /><link rel="next" href="ch06s03.html" title="6.3. Mangling functions" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch06.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch06s03.html">Next</a></td></tr></table><hr /></div><div class="section" title="6.2. Mangling classes"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_mangling_classes"></a>6.2. Mangling classes</h2></div></div></div><p>When abidos C++ has to deal with inner classes or classes inside of name spaces
+would can use a composite too. But do not use it.</p><pre class="screen">class A {
+  int a1;
+  class B{
+    int b1;
+  }
+};</pre><p>The symbols table at the end of his execution has:</p><p title="test_out/out_book_04.cpp.txt"><b>test_out/out_book_04.cpp.txt. </b>
+</p><pre class="screen">c_symbols_table::print
+{
+  stack level[0]
+  {
+    first[A]/.../abidos_cpp/processor/test/book_04.cpp:4 \
+      id[258]-&gt;[IDENTIFIER] text[A] type[265]-&gt;[CLASS_NAME] \
+      class_key[300]-&gt;[CLASS]
+    {
+      ...
+      vector_class_member [1]
+      {
+       [int] [a1]
+      }
+      map_class_member [1]
+      {
+       [PRIVATE]: [int] first[a1]-&gt;[a1]
+      }
+      ...
+    }
+    first[A::B]/.../abidos_cpp/processor/test/book_04.cpp:6 \
+      id[258]-&gt;[IDENTIFIER] text[A::B] type[265]-&gt;[CLASS_NAME] \ <a id="CO7-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+      class_key[300]-&gt;[CLASS]
+    {
+      ...
+      vector_class_member [1]
+      {
+       [int] [b1]
+      }
+      map_class_member [1]
+      {
+       [PRIVATE]: [int] first[b1]-&gt;[b1]
+      }
+      ...
+    }
+  }</pre><p title="test_out/out_book_04.cpp.txt">
+</p><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO7-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+Here we can see the trick <span class="strong"><strong>B</strong></span> is saved like <span class="strong"><strong>A::B</strong></span>.
+</p></td></tr></table></div><p>With this mangling technique Abidos C++ does not need a composite system to
+store inner classes and the processes of store and retrieve that information
+from the symbols table is more straight.</p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch06.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch06.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch06s03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

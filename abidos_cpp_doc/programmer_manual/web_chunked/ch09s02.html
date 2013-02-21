@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>9.2. Parts of context</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="ch09.html" title="Chapter 9. Context" /><link rel="prev" href="ch09.html" title="Chapter 9. Context" /><link rel="next" href="ch10.html" title="Chapter 10. Symbols table" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch09.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch10.html">Next</a></td></tr></table><hr /></div><div class="section" title="9.2. Parts of context"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_parts_of_context"></a>9.2. Parts of context</h2></div></div></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+unsigned i_token: is a pointer to <span class="strong"><strong>tokens_vector</strong></span>
+</li><li class="listitem"><p class="simpara">
+enum t_class_specifier_status class_specifier_status: with this semantic know
+where the syntactic are:
+</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+NO_CLASS_STATUS : parser is out of a class.
+</li><li class="listitem">
+CLASS_SPECIFIER_STATUS_IDENTIFIER : parser passed for class_specifier rule.
+</li><li class="listitem">
+CLASS_SPECIFIER_STATUS_BASE_DECLARATION : parser passed for class_head rule
+and now is inside of base_clause_opt rule.
+</li><li class="listitem">
+CLASS_SPECIFIER_STATUS_MEMBER_SPECIFIER : parser passed for
+member_declaration rule and now is inside of decl_specifier_seq_opt rule.
+</li><li class="listitem">
+CLASS_SPECIFIER_STATUS_MEMBER_DECLARATOR : parser passed for
+member_declaration rule and now is inside of member_declarator_list_opt rule.
+</li><li class="listitem">
+CLASS_SPECIFIER_STATUS_FRIEND_DECLARATOR : parser is inside of
+friend_specifier rule.
+</li></ul></div></li><li class="listitem">
+int class_key : in class_key rule this member specified:
+CLASS, STRUCT, UNION.
+</li><li class="listitem">
+int access_specifier: in class_key rule this member contains one of:
+PUBLIC, PRIVATE, PROTECTED.
+</li><li class="listitem">
+string class_name_declaration : contains the name of the class that parser
+are inside.
+</li><li class="listitem">
+int is_abstract : if a class have a function member with "=0;" in his finish
+then the class is abstract.
+</li><li class="listitem">
+int i_am_in_member : set inside of member_declaration rule.
+</li><li class="listitem">
+string member_declaration :   set by semantic::identifier() when
+i_am_in_member is 1.
+</li><li class="listitem">
+int member_definition_outside : set by
+c_semantic::check_coloncolon_member_function() inside of this function where can
+are in the scope of a class for example inside of the member function <span class="strong"><strong>A::f(){}</strong></span>
+we are in the scope of A then we need put that in the context and restore the
+previous context when we reach the <span class="strong"><strong>"}"</strong></span>.
+</li><li class="listitem">
+string declaration : set by c_semantic::identifier() when there
+is <span class="strong"><strong>NO_CLASS_STATUS == context.class_specifier_status</strong></span> condition.
+</li><li class="listitem">
+int i_am_in_parameter_declaration : set in parameter_declaration_clause
+rule.
+</li><li class="listitem">
+int just_reloaded : when the parser calls token_vector.clear() this
+member is set to 1, this is to avoid token_next() go over the first element
+of vector_tokens.
+</li><li class="listitem">
+t_vector_decl_specifier param_vector_decl_specifier : set in
+simple_type_specifier, parameter_declaration_list, ELLIPSIS_opt rules
+when context.i_am_in_parameter_declaration is 1.
+</li><li class="listitem"><p class="simpara">
+c_class_member class_member : used in the next rules
+</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+unqualified_id : class_member.is_destructor.
+</li><li class="listitem">
+operator_function_id : class_member.operator_overload_suffix,
+class_member.is_operator_overload.
+</li><li class="listitem">
+_operator : class_member.operator_overload_suffix,
+class_member.is_operator_overload.
+</li><li class="listitem">
+direct_declarator : class_member.is_function.
+</li><li class="listitem">
+consume_array_brackets : so far this is a dummy version, use
+class_member.is_function.
+</li></ul></div></li><li class="listitem"><p class="simpara">
+c_declarator declarator : used in the next rules :
+</p><div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+compound_statement : context.declarator.has_body = 1.
+</li><li class="listitem">
+simple_declaration : context.declarator.has_body = 0.
+</li><li class="listitem">
+direct_declarator : when the function is free →
+context.declarator.is_function = 1, if the function is a member class_member is
+used.
+</li></ul></div></li><li class="listitem">
+int is_typedef : used in typedef_specifier rule and in class_specifier
+some people use typedef class …
+</li><li class="listitem">
+int i_am_in_template_declaration : used in simple_type_specifier,
+template_declaration.
+</li><li class="listitem">
+int declaring_template_type : used in type_parameter.
+</li><li class="listitem">
+c_template_parameter template_parameter : used in type_parameter.
+</li><li class="listitem">
+t_vector_template_parameter : used in template_id, template_argument rules.
+</li><li class="listitem">
+t_map_template_parameter map_template_parameter : used in template_id rule.
+</li><li class="listitem">
+int is_template_instantiation : used in simple_type_specifier, ptr_specifier,
+template_id, template_argument, init_declarator rules.
+</li><li class="listitem">
+t_vector_template_argument vector_template_argument : used in
+simple_type_specifier, ptr_specifier, template_argument
+</li><li class="listitem">
+t_map_template_argument map_template_argument : used in
+c_semantic: class_member_declarator(), identifier_typedef(),
+declarator_insert().
+</li><li class="listitem">
+string namespace_name_declaration : used in original_namespace_definition
+rule.
+</li><li class="listitem">
+int is_enum_declaration : used in enum_specifier rule.
+</li><li class="listitem">
+int prefix_sharp : used in preprocessor_ifndef rule this is to search
+preprocessor symbols in symbols table with "#" prefix.
+</li><li class="listitem">
+int class_pre_declaration :  used in class_specifier rule and
+semantic::class_pre_declaration_to_declaration()
+</li></ul></div><pre class="screen"><span class="strong"><strong>class</strong></span> A;
+<span class="strong"><strong>class</strong></span> A {}; &lt;-- we are in A here</pre></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch09.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch09.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch10.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
