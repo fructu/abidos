@@ -14,5 +14,5 @@ abidos_cpp and there is documentation in abidos_cpp_doc.
 
 ** user manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_user_manual_draft_0.02.pdf
 
-** user manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_programmer_manual_draft_0.02.pdf
+** programmer manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_programmer_manual_draft_0.02.pdf
 
