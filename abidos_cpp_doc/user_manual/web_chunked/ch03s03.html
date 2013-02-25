@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>3.3. The hacker way Abidos toolchain explanation</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="index.html" title="Abidos C++ User Manual" /><link rel="up" href="ch03.html" title="Chapter 3. Abidos parsing" /><link rel="prev" href="ch03s02.html" title="3.2. The easy way parsing a set of C++ files" /><link rel="next" href="ch04.html" title="Chapter 4. Uninstall" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch03s02.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr /></div><div class="section" title="3.3. The hacker way Abidos toolchain explanation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_the_hacker_way_abidos_toolchain_explanation"></a>3.3. The hacker way Abidos toolchain explanation</h2></div></div></div><p>When you are going to parse a C++ project with Abidos, you need a special
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>3.3. The hacker way Abidos toolchain explanation</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/index.html" title="Abidos C++ User Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch03.html" title="Chapter 3. Abidos parsing" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch03s02.html" title="3.2. The easy way parsing a set of C++ files" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch04.html" title="Chapter 4. Uninstall" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch03s02.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch04.html">Next</a></td></tr></table><hr /></div><div class="section" title="3.3. The hacker way Abidos toolchain explanation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_the_hacker_way_abidos_toolchain_explanation"></a>3.3. The hacker way Abidos toolchain explanation</h2></div></div></div><p>When you are going to parse a C++ project with Abidos, you need a special
 directory called <span class="strong"><strong>.abidos_cpp/</strong></span> in the same directory you have the <span class="strong"><strong>Makefile</strong></span>.</p><p>In order to work properly and parse successfully a C++ project abidos need be
 loaded with the file <span class="strong"><strong>.abidos_cpp/files_input</strong></span>, in this file each line is like:</p><pre class="screen">/home/.../src/main.cpp:/home/.../includes:/home/.../src
 /home/.../src/file1.cpp:/home/.../includes:/home/.../src</pre><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>"…" is to do not make more bloat the example.</p></td></tr></table></div><p>Those lines begin with a cpp file and are followed by some directories separated
@@ -30,7 +30,93 @@ It searches -I options to extract the includes directories.
 </li><li class="listitem">
 It adds the directory of the cpp file too.
 </li></ul></div><p>This figure shows the whole process:</p><div class="informalfigure"><div class="mediaobject" align="center">
-<img src="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/images/chapter_abidos_parsing_abidos_flow_diagram_01.svg" align="middle" alt="images/chapter_abidos_parsing_abidos_flow_diagram_01.svg" />
+<!-- extract of file[web_chunked/images/chapter_abidos_parsing_abidos_flow_diagram_01.svg] {-->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" [
+ <!ATTLIST svg xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Generated by Graphviz version 2.20.2 (Tue Mar &#160;2 19:03:41 UTC 2010)
+     For user: (hevia) hevia,,, -->
+<!-- Title: abidos_flow_diagram_01 Pages: 1 -->
+<svg width="372pt" height="446pt"
+ viewBox="0.00 0.00 372.00 446.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 442)">
+<title>abidos_flow_diagram_01</title>
+<polygon style="fill:white;stroke:white;" points="-4,4 -4,-442 368,-442 368,4 -4,4"/>
+<!-- make_out.txt -->
+<g id="node1" class="node"><title>make_out.txt</title>
+<polygon style="fill:none;stroke:black;" points="215,-438 107,-438 107,-402 215,-402 215,-438"/>
+<text text-anchor="middle" x="161" y="-415.9" style="font-family:Times New Roman;font-size:14.00;">make_out.txt</text>
+</g>
+<!-- abidos_make_process.pl -->
+<g id="node2" class="node"><title>abidos_make_process.pl</title>
+<ellipse style="fill:none;stroke:black;" cx="161" cy="-346" rx="123.884" ry="18"/>
+<text text-anchor="middle" x="161" y="-341.9" style="font-family:Times New Roman;font-size:14.00;">abidos_make_process.pl</text>
+</g>
+<!-- make_out.txt&#45;&gt;abidos_make_process.pl -->
+<g id="edge2" class="edge"><title>make_out.txt&#45;&gt;abidos_make_process.pl</title>
+<path style="fill:none;stroke:black;" d="M161,-402C161,-393 161,-384 161,-374"/>
+<polygon style="fill:black;stroke:black;" points="164.5,-374 161,-364 157.5,-374 164.5,-374"/>
+</g>
+<!-- abidos -->
+<g id="node3" class="node"><title>abidos</title>
+<ellipse style="fill:none;stroke:black;" cx="143" cy="-182" rx="41.1906" ry="18"/>
+<text text-anchor="middle" x="143" y="-177.9" style="font-family:Times New Roman;font-size:14.00;">abidos</text>
+</g>
+<!-- abidos_make_process.pl&#45;&gt;abidos -->
+<g id="edge6" class="edge"><title>abidos_make_process.pl&#45;&gt;abidos</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M92,-331C61,-320 27,-303 8,-274 0,-260 0,-251 8,-238 27,-209 63,-195 93,-188"/>
+<polygon style="fill:black;stroke:black;" points="93.8806,-191.393 103,-186 92.5078,-184.529 93.8806,-191.393"/>
+<text text-anchor="middle" x="41" y="-251.9" style="font-family:Times New Roman;font-size:14.00;">1 invoke</text>
+</g>
+<!-- xdot_run.py (show UML) -->
+<g id="node4" class="node"><title>xdot_run.py (show UML)</title>
+<ellipse style="fill:none;stroke:black;" cx="235" cy="-18" rx="129.248" ry="18"/>
+<text text-anchor="middle" x="235" y="-13.9" style="font-family:Times New Roman;font-size:14.00;">xdot_run.py (show UML)</text>
+</g>
+<!-- abidos_make_process.pl&#45;&gt;xdot_run.py (show UML) -->
+<g id="edge12" class="edge"><title>abidos_make_process.pl&#45;&gt;xdot_run.py (show UML)</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M209,-329C239,-315 274,-291 274,-256 274,-256 274,-256 274,-92 274,-75 266,-58 257,-44"/>
+<polygon style="fill:black;stroke:black;" points="259.8,-41.9 251,-36 254.2,-46.1 259.8,-41.9"/>
+<text text-anchor="middle" x="303" y="-177.9" style="font-family:Times New Roman;font-size:14.00;">2 invoke</text>
+</g>
+<!-- .abidos_cpp/files_input -->
+<g id="node5" class="node"><title>.abidos_cpp/files_input</title>
+<polygon style="fill:none;stroke:black;" points="246,-274 76,-274 76,-238 246,-238 246,-274"/>
+<text text-anchor="middle" x="161" y="-251.9" style="font-family:Times New Roman;font-size:14.00;">.abidos_cpp/files_input</text>
+</g>
+<!-- abidos_make_process.pl&#45;&gt;.abidos_cpp/files_input -->
+<g id="edge4" class="edge"><title>abidos_make_process.pl&#45;&gt;.abidos_cpp/files_input</title>
+<path style="fill:none;stroke:black;" d="M161,-328C161,-315 161,-299 161,-284"/>
+<polygon style="fill:black;stroke:black;" points="164.5,-284 161,-274 157.5,-284 164.5,-284"/>
+<text text-anchor="middle" x="192" y="-296.9" style="font-family:Times New Roman;font-size:14.00;">generate</text>
+</g>
+<!-- .abidos_cpp/files_output.dot -->
+<g id="node6" class="node"><title>.abidos_cpp/files_output.dot</title>
+<polygon style="fill:none;stroke:black;" points="246,-110 40,-110 40,-74 246,-74 246,-110"/>
+<text text-anchor="middle" x="143" y="-87.9" style="font-family:Times New Roman;font-size:14.00;">.abidos_cpp/files_output.dot</text>
+</g>
+<!-- abidos&#45;&gt;.abidos_cpp/files_output.dot -->
+<g id="edge10" class="edge"><title>abidos&#45;&gt;.abidos_cpp/files_output.dot</title>
+<path style="fill:none;stroke:black;" d="M143,-164C143,-151 143,-135 143,-120"/>
+<polygon style="fill:black;stroke:black;" points="146.5,-120 143,-110 139.5,-120 146.5,-120"/>
+<text text-anchor="middle" x="174" y="-132.9" style="font-family:Times New Roman;font-size:14.00;">generate</text>
+</g>
+<!-- .abidos_cpp/files_input&#45;&gt;abidos -->
+<g id="edge8" class="edge"><title>.abidos_cpp/files_input&#45;&gt;abidos</title>
+<path style="fill:none;stroke:black;" d="M157,-238C155,-229 152,-219 150,-210"/>
+<polygon style="fill:black;stroke:black;" points="153.226,-208.573 147,-200 146.521,-210.584 153.226,-208.573"/>
+</g>
+<!-- .abidos_cpp/files_output.dot&#45;&gt;xdot_run.py (show UML) -->
+<g id="edge14" class="edge"><title>.abidos_cpp/files_output.dot&#45;&gt;xdot_run.py (show UML)</title>
+<path style="fill:none;stroke:black;" d="M166,-74C177,-64 192,-52 205,-42"/>
+<polygon style="fill:black;stroke:black;" points="207.1,-44.8 213,-36 202.9,-39.2 207.1,-44.8"/>
+</g>
+</g>
+</svg>
+
+<!-- } extract of file[web_chunked/images/chapter_abidos_parsing_abidos_flow_diagram_01.svg] end-->
 </div></div><p>to summarize the different parts of abidos have worked in the previous figure
 are:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 make_out.txt, is the output of make process.
@@ -60,4 +146,4 @@ generated
 </p></td></tr></table></div><pre class="screen">    ls .abidos_cpp/
     files_input  files_output.dot</pre><p>You can visualize the output of abidos</p><pre class="screen">  xdot_run.py .abidos_cpp/files_output.dot</pre><div class="footnotes"><br /><hr width="100" align="left" /><div class="footnote"><p><sup>[<a id="ftn.id347121" href="#id347121" class="simpara">1</a>] </sup>graphviz <a class="ulink" href="http://www.graphviz.org/" target="_top">http://www.graphviz.org/</a> a superb project to generate and
   visualize graphs</p></div><div class="footnote"><p><sup>[<a id="ftn.id355465" href="#id355465" class="simpara">2</a>] </sup>xdot.py <a class="ulink" href="http://code.google.com/p/jrfonseca/wiki/XDot" target="_top">http://code.google.com/p/jrfonseca/wiki/XDot</a> with a little
-  hacking of my own <a class="ulink" href="http://code.google.com/p/xdot-multi-line" target="_top">http://code.google.com/p/xdot-multi-line</a></p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s02.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
+  hacking of my own <a class="ulink" href="http://code.google.com/p/xdot-multi-line" target="_top">http://code.google.com/p/xdot-multi-line</a></p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch03s02.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
