@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>7.3. Meaningful parts of parser</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html" title="Chapter 7. Recursive descent parser" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s02.html" title="7.2. Debugging Abidos" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s04.html" title="7.4. How do token_get() token_next() do their work ?" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s02.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s04.html">Next</a></td></tr></table><hr /></div><div class="section" title="7.3. Meaningful parts of parser"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_meaningful_parts_of_parser"></a>7.3. Meaningful parts of parser</h2></div></div></div><p>Now we can go to see what parts have Abidos parser to do his work, all these
+are the core of the project and understand them is a <span class="strong"><strong>must</strong></span> to begin to hack
+Abidos.</p><p>Parser function token_next() uses yylex() function to get tokens from lexer, but
+parser needs a buffer to store these tokens and tokens_vector is that buffer. To
+explain this more deeply lets see an example.
+<a id="id592022" class="indexterm"></a>
+<a id="id592031" class="indexterm"></a></p><p>Abidos have a big grammar because C++ is a complex language, the first step is
+hack that grammar and do a little grammar in order to have a clear explanation,
+the mechanics of the whole set of Abidos rules are the same. we will work with
+this little grammar:</p><pre class="screen">S -&gt; VARIABLE | FUNCTION
+VARIABLE -&gt; int &lt;IDENTIFIER&gt; ";"
+FUNCTION -&gt; int &lt;IDENTIFIER&gt; "(" ")" ";"</pre><p>this grammar can match expressions like these:</p><pre class="screen"><span class="strong"><strong>int</strong></span> i;
+<span class="strong"><strong>int</strong></span> f();</pre><p>We can translate these rules to Abidos fashion and the result is these method
+rules of parser:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+S rule
+</li></ul></div><p>Has the initialization of the trace system and the calls to the other rules.</p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::S(<span class="strong"><strong>void</strong></span>)
+{
+    c_trace_node trace_node; <a id="CO14-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+
+    trace_node.set("S");
+
+    tokens_vector_clear(); <a id="CO14-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" />
+
+    <span class="strong"><strong>if</strong></span> (1 == VARIABLE(trace_node)) { <a id="CO14-3"></a><img src="images/icons/callouts/3.png" alt="3" border="0" />
+        <span class="strong"><strong>return</strong></span> 1;
+    }
+
+    <span class="strong"><strong>if</strong></span> (1 == FUNCTION(trace_node)) {
+        <span class="strong"><strong>return</strong></span> 1;
+    }
+
+    <span class="strong"><strong>return</strong></span> 0;
+}</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO14-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+here is where trace tree begins, with this tree we will see the rules used
+by Abidos to parse an example.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO14-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+parser uses this vector like a buffer between lexer and himself, it will
+full explained in a moment.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO14-3"><img src="images/icons/callouts/3.png" alt="3" border="0" /></a> </p></td><td valign="top" align="left"><p>
+this is the codification of a call rule.
+</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+VARIABLE rule
+</li></ul></div><p>This rule tries to match expressions like <span class="strong"><strong>"int i;"</strong></span>.</p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::VARIABLE(c_trace_node trace_node)
+{
+    trace_graph.add(trace_node, "VARIABLE"); <a id="CO15-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+    c_context_tokens context_tokens(context); <a id="CO15-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" />
+
+    token_next(trace_node.get_tab()); <a id="CO15-3"></a><img src="images/icons/callouts/3.png" alt="3" border="0" />
+    <span class="strong"><strong>if</strong></span> ( token_is_not(INT, trace_node) ) { <a id="CO15-4"></a><img src="images/icons/callouts/4.png" alt="4" border="0" />
+        context = context_tokens.restore(); <a id="CO15-5"></a><img src="images/icons/callouts/5.png" alt="5" border="0" />
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    token_next(trace_node.get_tab());
+    <span class="strong"><strong>if</strong></span> ( token_is_not(IDENTIFIER, trace_node) ) {
+        context = context_tokens.restore();
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    token_next(trace_node.get_tab());
+    <span class="strong"><strong>if</strong></span> ( token_is_not(';', trace_node) ) {
+        context = context_tokens.restore();
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    <span class="strong"><strong>return</strong></span> 1;
+}</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO15-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+this is how trace system knows what rule is working.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO15-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+here we save the context in the point 5 we will see why is important.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO15-3"><img src="images/icons/callouts/3.png" alt="3" border="0" /></a> </p></td><td valign="top" align="left"><p>
+in this function parser read a token from the buffer or from the lexer.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO15-4"><img src="images/icons/callouts/4.png" alt="4" border="0" /></a> </p></td><td valign="top" align="left"><p>
+this is the way to check if the actual token is an <span class="strong"><strong>INT</strong></span>.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO15-5"><img src="images/icons/callouts/5.png" alt="5" border="0" /></a> </p></td><td valign="top" align="left"><p>
+suppose the token read is <span class="strong"><strong>VOID</strong></span> we need restore the context in order to can
+read <span class="strong"><strong>VOID</strong></span> in other rule if we do not restore the context we would lose the
+actual token.
+</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+FUNCTION rule
+</li></ul></div><p>This rule tries to match expressions like <span class="strong"><strong>int f();</strong></span>.</p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::FUNCTION(c_trace_node trace_node)
+{
+    trace_graph.add(trace_node, "FUNCTION");
+    c_context_tokens context_tokens(context);
+
+    token_next(trace_node.get_tab());
+    <span class="strong"><strong>if</strong></span> ( token_is_not(INT, trace_node) ) {
+        context = context_tokens.restore();
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    token_next(trace_node.get_tab());
+    <span class="strong"><strong>if</strong></span> ( token_is_not(IDENTIFIER, trace_node) ) {
+        context = context_tokens.restore();
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    token_next(trace_node.get_tab());
+    <span class="strong"><strong>if</strong></span> ( token_is_not('(', trace_node) ) {
+        context = context_tokens.restore();
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    token_next(trace_node.get_tab());
+    <span class="strong"><strong>if</strong></span> ( token_is_not(')', trace_node) ) {
+        context = context_tokens.restore();
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    token_next(trace_node.get_tab());
+    <span class="strong"><strong>if</strong></span> ( token_is_not(';', trace_node) ) {
+        context = context_tokens.restore();
+        <span class="strong"><strong>return</strong></span> 0;
+    }
+
+    <span class="strong"><strong>return</strong></span> 1;
+}</pre><p>This rule is pretty similar to the previous one except in this rule we need
+match <span class="strong"><strong>"("</strong></span> and <span class="strong"><strong>")"</strong></span> before <span class="strong"><strong>";"</strong></span>.</p><p>Lets see an example of a variable declaration:</p><pre class="screen"><span class="strong"><strong>int</strong></span> i;</pre><p>We can see how all the tokens are matched in the VARIABLE rule.</p><div class="figure"><a id="id592469"></a><p class="title"><b>Figure 7.3. variable trace tree</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<!-- extract of file[web_github_chunked_svg/images/chapter_parsing_trace_book_little_grammar_variable.cpp.svg] {-->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" [
+ <!ATTLIST svg xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Generated by Graphviz version 2.20.2 (Tue Mar &#160;2 19:03:41 UTC 2010)
+     For user: (hevia) hevia,,, -->
+<!-- Title: G Pages: 1 -->
+<svg width="144pt" height="81pt"
+ viewBox="0.00 0.00 144.00 80.69" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.62069 0.62069) rotate(0) translate(4 126)">
+<title>G</title>
+<polygon style="fill:white;stroke:white;" points="-4,4 -4,-126 228,-126 228,4 -4,4"/>
+<!-- ROOT -->
+<g id="node1" class="node"><title>ROOT</title>
+<ellipse style="fill:none;stroke:black;" cx="112" cy="-104" rx="27" ry="18"/>
+<text text-anchor="middle" x="112" y="-99.9" style="font-family:Times New Roman;font-size:14.00;">S</text>
+</g>
+<!-- _2_VARIABLE -->
+<g id="node2" class="node"><title>_2_VARIABLE</title>
+<polygon style="fill:none;stroke:green;" points="0,-0 0,-50 224,-50 224,-0 0,-0"/>
+<text text-anchor="middle" x="112" y="-32.9" style="font-family:Times New Roman;font-size:14.00;">_2_VARIABLE</text>
+<polyline style="fill:none;stroke:green;" points="0,-25 224,-25 "/>
+<text text-anchor="start" x="8" y="-7.9" style="font-family:Times New Roman;font-size:14.00;">int is INT i is IDENTIFIER ; is ; </text>
+</g>
+<!-- ROOT&#45;&gt;_2_VARIABLE -->
+<g id="edge2" class="edge"><title>ROOT&#45;&gt;_2_VARIABLE</title>
+<path style="fill:none;stroke:black;" d="M112,-86C112,-78 112,-69 112,-60"/>
+<polygon style="fill:black;stroke:black;" points="115.5,-60 112,-50 108.5,-60 115.5,-60"/>
+</g>
+</g>
+</svg>
+
+<!-- } extract of file[web_github_chunked_svg/images/chapter_parsing_trace_book_little_grammar_variable.cpp.svg] end-->
+</div></div></div><br class="figure-break" /><p>Now lets see an example of a function declaration:</p><pre class="screen"><span class="strong"><strong>int</strong></span> f();</pre><p>now the VARIABLE rule does not match all the tokens and Abidos executes the
+another rule FUNCTION.</p><div class="figure"><a id="id592512"></a><p class="title"><b>Figure 7.4. function trace tree</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<!-- extract of file[web_github_chunked_svg/images/chapter_parsing_trace_book_little_grammar_function.cpp.svg] {-->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" [
+ <!ATTLIST svg xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Generated by Graphviz version 2.20.2 (Tue Mar &#160;2 19:03:41 UTC 2010)
+     For user: (hevia) hevia,,, -->
+<!-- Title: G Pages: 1 -->
+<svg width="360pt" height="110pt"
+ viewBox="0.00 0.00 360.00 109.69" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.703125 0.703125) rotate(0) translate(4 152)">
+<title>G</title>
+<polygon style="fill:white;stroke:white;" points="-4,4 -4,-152 508,-152 508,4 -4,4"/>
+<!-- _1_S -->
+<g id="node1" class="node"><title>_1_S</title>
+<ellipse style="fill:none;stroke:black;" cx="226" cy="-130" rx="27" ry="18"/>
+<text text-anchor="middle" x="226" y="-125.9" style="font-family:Times New Roman;font-size:14.00;">S</text>
+</g>
+<!-- _2_VARIABLE -->
+<g id="node2" class="node"><title>_2_VARIABLE</title>
+<polygon style="fill:none;stroke:green;" points="0,-0 0,-75 192,-75 192,-0 0,-0"/>
+<text text-anchor="middle" x="96" y="-57.9" style="font-family:Times New Roman;font-size:14.00;">_2_VARIABLE</text>
+<polyline style="fill:none;stroke:green;" points="0,-50 192,-50 "/>
+<text text-anchor="start" x="8" y="-32.9" style="font-family:Times New Roman;font-size:14.00;">int is INT f is IDENTIFIER </text>
+<polyline style="fill:none;stroke:green;" points="0,-25 192,-25 "/>
+<text text-anchor="middle" x="96" y="-7.9" style="font-family:Times New Roman;font-size:14.00;">( is_not ; </text>
+</g>
+<!-- _1_S&#45;&gt;_2_VARIABLE -->
+<g id="edge2" class="edge"><title>_1_S&#45;&gt;_2_VARIABLE</title>
+<path style="fill:none;stroke:black;" d="M207,-117C194,-107 175,-94 156,-81"/>
+<polygon style="fill:black;stroke:black;" points="158.1,-78.2 148,-75 153.9,-83.8 158.1,-78.2"/>
+</g>
+<!-- _3_FUNCTION -->
+<g id="node3" class="node"><title>_3_FUNCTION</title>
+<polygon style="fill:none;stroke:green;" points="210,-13 210,-63 504,-63 504,-13 210,-13"/>
+<text text-anchor="middle" x="357" y="-45.9" style="font-family:Times New Roman;font-size:14.00;">_3_FUNCTION</text>
+<polyline style="fill:none;stroke:green;" points="210,-38 504,-38 "/>
+<text text-anchor="start" x="218" y="-20.9" style="font-family:Times New Roman;font-size:14.00;">int is INT f is IDENTIFIER ( is ( ) is ) ; is ; </text>
+</g>
+<!-- _1_S&#45;&gt;_3_FUNCTION -->
+<g id="edge4" class="edge"><title>_1_S&#45;&gt;_3_FUNCTION</title>
+<path style="fill:none;stroke:black;" d="M245,-117C263,-105 290,-85 313,-69"/>
+<polygon style="fill:black;stroke:black;" points="315.1,-71.8 321,-63 310.9,-66.2 315.1,-71.8"/>
+</g>
+</g>
+</svg>
+
+<!-- } extract of file[web_github_chunked_svg/images/chapter_parsing_trace_book_little_grammar_function.cpp.svg] end-->
+</div></div></div><br class="figure-break" /><p>When Abidos executes VARIABLE rule here get from lexer the tokens <span class="strong"><strong>int f "("</strong></span>
+and stores these in <span class="strong"><strong>tokens_vector</strong></span> a buffer queue each time <span class="strong"><strong>token_next()</strong></span>
+is called, when VARIABLE rule tries to
+match <span class="strong"><strong>"("</strong></span> like a <span class="strong"><strong>";"</strong></span> fails and restore context, when FUNCTION rule starts to
+work token_next() use <span class="strong"><strong>tokens_vector</strong></span> to get the tokens starting
+in <span class="strong"><strong>context.i_token</strong></span> therefore <span class="strong"><strong>int f "("</strong></span> are processed another time,
+when <span class="strong"><strong>"("</strong></span> is read the next time token_next() is called it calls <span class="strong"><strong>yylex()</strong></span>
+to obtain <span class="strong"><strong>")"</strong></span> from lexer because <span class="strong"><strong>context.i_token</strong></span> reaches the end
+of <span class="strong"><strong>tokens_vector</strong></span>.</p><p><a id="id592614" class="indexterm"></a>
+<a id="id592622" class="indexterm"></a>
+<a id="id592633" class="indexterm"></a>
+<a id="id592641" class="indexterm"></a>
+<a id="id592652" class="indexterm"></a></p><p>In the next diagram we can see how S calls VARIABLE rule and inside of the rule
+execute the <span class="strong"><strong>token_next()</strong></span> in order to obtain the tokens from lexer and putting
+them in the queue <span class="strong"><strong>tokens_vector</strong></span>.</p><div class="figure"><a id="id592677"></a><p class="title"><b>Figure 7.5. token_next() calls and buffer changes</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<!-- extract of file[web_github_chunked_svg/images/chapter_parsing_token_next_buffer_01.svg] {-->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" [
+ <!ATTLIST svg xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink">
+]>
+<!-- Generated by Graphviz version 2.20.2 (Tue Mar &#160;2 19:03:41 UTC 2010)
+     For user: (hevia) hevia,,, -->
+<!-- Title: stack_01 Pages: 1 -->
+<svg width="990pt" height="599pt"
+ viewBox="0.00 0.00 990.00 599.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 595)">
+<title>stack_01</title>
+<polygon style="fill:white;stroke:white;" points="-4,4 -4,-595 986,-595 986,4 -4,4"/>
+<g id="cluster2" class="cluster"><title>cluster_variable_rule</title>
+<polygon style="fill:none;stroke:black;" points="283,-180 283,-527 449,-527 449,-180 283,-180"/>
+<text text-anchor="middle" x="366" y="-510.9" style="font-family:Times New Roman;font-size:14.00;">VARIABLE_rule</text>
+</g>
+<g id="cluster3" class="cluster"><title>cluster_function_rule</title>
+<polygon style="fill:none;stroke:black;" points="610,-90 610,-527 776,-527 776,-90 610,-90"/>
+<text text-anchor="middle" x="693" y="-510.9" style="font-family:Times New Roman;font-size:14.00;">FUNCTION_rule</text>
+</g>
+<!-- s -->
+<g id="node1" class="node"><title>s</title>
+<polygon style="fill:none;stroke:black;" points="487,-555 487,-591 541,-591 541,-555 487,-555"/>
+<text text-anchor="middle" x="514" y="-574.4" style="font-family:Times New Roman;font-size:14.00;">S</text>
+</g>
+<!-- t1 -->
+<g id="node8" class="node"><title>t1</title>
+<ellipse style="fill:none;stroke:black;" cx="366" cy="-476" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="366" y="-471.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- s&#45;&gt;t1 -->
+<g id="edge18" class="edge"><title>s&#45;&gt;t1</title>
+<path style="fill:none;stroke:black;" d="M487,-555C463,-539 427,-515 401,-498"/>
+<polygon style="fill:black;stroke:black;" points="402.441,-494.797 392,-493 399.042,-500.916 402.441,-494.797"/>
+</g>
+<!-- tf1 -->
+<g id="node21" class="node"><title>tf1</title>
+<ellipse style="fill:none;stroke:black;" cx="693" cy="-476" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="693" y="-471.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- s&#45;&gt;tf1 -->
+<g id="edge20" class="edge"><title>s&#45;&gt;tf1</title>
+<path style="fill:none;stroke:black;" d="M541,-559C544,-558 547,-556 550,-555 579,-541 587,-541 614,-527 630,-519 646,-508 660,-498"/>
+<polygon style="fill:black;stroke:black;" points="661.958,-500.916 669,-493 658.559,-494.797 661.958,-500.916"/>
+</g>
+<!-- s1 -->
+<g id="node2" class="node"><title>s1</title>
+<polygon style="fill:none;stroke:black;" points="206,-368 206,-404 260,-404 260,-368 206,-368"/>
+<text text-anchor="middle" x="233" y="-387.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+</g>
+<!-- s2 -->
+<g id="node3" class="node"><title>s2</title>
+<polygon style="fill:none;stroke:black;" points="201,-278 201,-314 257,-314 257,-278 201,-278"/>
+<text text-anchor="middle" x="218" y="-297.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="236,-278 236,-314 "/>
+<text text-anchor="middle" x="246" y="-297.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+</g>
+<!-- s1&#45;&gt;s2 -->
+<!-- s3 -->
+<g id="node4" class="node"><title>s3</title>
+<polygon style="fill:none;stroke:black;" points="196,-188 196,-224 273,-224 273,-188 196,-188"/>
+<text text-anchor="middle" x="213" y="-207.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="231,-188 231,-224 "/>
+<text text-anchor="middle" x="241" y="-207.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+<polyline style="fill:none;stroke:black;" points="252,-188 252,-224 "/>
+<text text-anchor="middle" x="262" y="-207.4" style="font-family:Times New Roman;font-size:14.00;">(</text>
+</g>
+<!-- s2&#45;&gt;s3 -->
+<!-- s4 -->
+<g id="node5" class="node"><title>s4</title>
+<polygon style="fill:none;stroke:black;" points="196,-98 196,-134 273,-134 273,-98 196,-98"/>
+<text text-anchor="middle" x="213" y="-117.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="231,-98 231,-134 "/>
+<text text-anchor="middle" x="241" y="-117.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+<polyline style="fill:none;stroke:black;" points="252,-98 252,-134 "/>
+<text text-anchor="middle" x="262" y="-117.4" style="font-family:Times New Roman;font-size:14.00;">(</text>
+</g>
+<!-- s3&#45;&gt;s4 -->
+<!-- s4_note -->
+<g id="node6" class="node"><title>s4_note</title>
+<polygon style="fill:none;stroke:black;" points="172,-224 8.52651e-14,-224 0,-188 178,-188 178,-218 172,-224"/>
+<polyline style="fill:none;stroke:black;" points="172,-224 172,-218 "/>
+<polyline style="fill:none;stroke:black;" points="178,-218 172,-218 "/>
+<text text-anchor="middle" x="89" y="-201.9" style="font-family:Times New Roman;font-size:14.00;">context.itoken restored</text>
+</g>
+<!-- s4_note&#45;&gt;s4 -->
+<g id="edge55" class="edge"><title>s4_note&#45;&gt;s4</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M118,-188C138,-175 165,-158 188,-140"/>
+<polygon style="fill:black;stroke:black;" points="190.1,-142.8 196,-134 185.9,-137.2 190.1,-142.8"/>
+</g>
+<!-- t1_note -->
+<g id="node7" class="node"><title>t1_note</title>
+<polygon style="fill:none;stroke:black;" points="463,-591 243,-591 243,-555 469,-555 469,-585 463,-591"/>
+<polyline style="fill:none;stroke:black;" points="463,-591 463,-585 "/>
+<polyline style="fill:none;stroke:black;" points="469,-585 463,-585 "/>
+<text text-anchor="middle" x="356" y="-568.9" style="font-family:Times New Roman;font-size:14.00;">&quot;int&quot; &quot;f&quot; &quot;(&quot; are read from lexer</text>
+</g>
+<!-- t1_note&#45;&gt;t1 -->
+<g id="edge34" class="edge"><title>t1_note&#45;&gt;t1</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M358,-555C360,-541 361,-521 363,-504"/>
+<polygon style="fill:black;stroke:black;" points="366.488,-504.299 364,-494 359.522,-503.602 366.488,-504.299"/>
+</g>
+<!-- t2 -->
+<g id="node9" class="node"><title>t2</title>
+<ellipse style="fill:none;stroke:black;" cx="366" cy="-386" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="366" y="-381.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- t1_note&#45;&gt;t2 -->
+<g id="edge36" class="edge"><title>t1_note&#45;&gt;t2</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M316,-555C304,-548 291,-538 282,-527 253,-488 228,-460 256,-422 262,-413 281,-406 300,-401"/>
+<polygon style="fill:black;stroke:black;" points="301.427,-404.226 310,-398 299.416,-397.521 301.427,-404.226"/>
+</g>
+<!-- t3 -->
+<g id="node10" class="node"><title>t3</title>
+<ellipse style="fill:none;stroke:black;" cx="366" cy="-296" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="366" y="-291.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- t1_note&#45;&gt;t3 -->
+<g id="edge38" class="edge"><title>t1_note&#45;&gt;t3</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M418,-555C431,-548 442,-539 450,-527 488,-467 480,-432 450,-368 441,-348 423,-331 406,-319"/>
+<polygon style="fill:black;stroke:black;" points="407.262,-315.635 397,-313 403.379,-321.459 407.262,-315.635"/>
+</g>
+<!-- t1&#45;&gt;s1 -->
+<g id="edge26" class="edge"><title>t1&#45;&gt;s1</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M316,-462C301,-457 285,-450 272,-440 263,-432 255,-422 248,-413"/>
+<polygon style="fill:black;stroke:black;" points="250.916,-411.042 243,-404 244.797,-414.441 250.916,-411.042"/>
+<text text-anchor="middle" x="329" y="-426.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- t1&#45;&gt;t2 -->
+<g id="edge3" class="edge"><title>t1&#45;&gt;t2</title>
+<path style="fill:none;stroke:black;" d="M377,-458C379,-452 382,-446 383,-440 385,-432 385,-429 383,-422 383,-419 382,-416 381,-413"/>
+<polygon style="fill:black;stroke:black;" points="384.26,-411.717 377,-404 377.863,-414.56 384.26,-411.717"/>
+</g>
+<!-- t2&#45;&gt;s2 -->
+<g id="edge28" class="edge"><title>t2&#45;&gt;s2</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M312,-373C288,-367 263,-359 255,-350 249,-343 247,-333 246,-324"/>
+<polygon style="fill:black;stroke:black;" points="249.478,-323.602 245,-314 242.512,-324.299 249.478,-323.602"/>
+<text text-anchor="middle" x="312" y="-336.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- t2&#45;&gt;t3 -->
+<g id="edge5" class="edge"><title>t2&#45;&gt;t3</title>
+<path style="fill:none;stroke:black;" d="M366,-368C366,-355 366,-339 366,-324"/>
+<polygon style="fill:black;stroke:black;" points="369.5,-324 366,-314 362.5,-324 369.5,-324"/>
+</g>
+<!-- t3&#45;&gt;s3 -->
+<g id="edge30" class="edge"><title>t3&#45;&gt;s3</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M312,-283C289,-277 266,-269 259,-260 254,-253 253,-243 254,-234"/>
+<polygon style="fill:black;stroke:black;" points="257.471,-234.492 256,-224 250.607,-233.119 257.471,-234.492"/>
+<text text-anchor="middle" x="316" y="-246.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- t4 -->
+<g id="node11" class="node"><title>t4</title>
+<ellipse style="fill:none;stroke:black;" cx="359" cy="-206" rx="50.9221" ry="18"/>
+<text text-anchor="middle" x="359" y="-201.9" style="font-family:Times New Roman;font-size:14.00;"> retore()</text>
+</g>
+<!-- t3&#45;&gt;t4 -->
+<g id="edge7" class="edge"><title>t3&#45;&gt;t4</title>
+<path style="fill:none;stroke:black;" d="M369,-278C371,-267 372,-254 370,-242 370,-239 369,-237 369,-234"/>
+<polygon style="fill:black;stroke:black;" points="372.226,-232.573 366,-224 365.521,-234.584 372.226,-232.573"/>
+</g>
+<!-- t4&#45;&gt;s4 -->
+<g id="edge32" class="edge"><title>t4&#45;&gt;s4</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M329,-191C304,-179 269,-161 239,-140"/>
+<polygon style="fill:black;stroke:black;" points="241.1,-137.2 231,-134 236.9,-142.8 241.1,-137.2"/>
+<text text-anchor="middle" x="344" y="-156.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- sf1 -->
+<g id="node16" class="node"><title>sf1</title>
+<polygon style="fill:none;stroke:black;" points="517,-368 517,-404 594,-404 594,-368 517,-368"/>
+<text text-anchor="middle" x="534" y="-387.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="552,-368 552,-404 "/>
+<text text-anchor="middle" x="562" y="-387.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+<polyline style="fill:none;stroke:black;" points="573,-368 573,-404 "/>
+<text text-anchor="middle" x="583" y="-387.4" style="font-family:Times New Roman;font-size:14.00;">(</text>
+</g>
+<!-- sf2 -->
+<g id="node17" class="node"><title>sf2</title>
+<polygon style="fill:none;stroke:black;" points="509,-278 509,-314 586,-314 586,-278 509,-278"/>
+<text text-anchor="middle" x="526" y="-297.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="544,-278 544,-314 "/>
+<text text-anchor="middle" x="554" y="-297.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+<polyline style="fill:none;stroke:black;" points="565,-278 565,-314 "/>
+<text text-anchor="middle" x="575" y="-297.4" style="font-family:Times New Roman;font-size:14.00;">(</text>
+</g>
+<!-- sf1&#45;&gt;sf2 -->
+<!-- sf3 -->
+<g id="node18" class="node"><title>sf3</title>
+<polygon style="fill:none;stroke:black;" points="511,-188 511,-224 588,-224 588,-188 511,-188"/>
+<text text-anchor="middle" x="528" y="-207.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="546,-188 546,-224 "/>
+<text text-anchor="middle" x="556" y="-207.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+<polyline style="fill:none;stroke:black;" points="567,-188 567,-224 "/>
+<text text-anchor="middle" x="577" y="-207.4" style="font-family:Times New Roman;font-size:14.00;">(</text>
+</g>
+<!-- sf2&#45;&gt;sf3 -->
+<!-- sf4 -->
+<g id="node19" class="node"><title>sf4</title>
+<polygon style="fill:none;stroke:black;" points="500,-98 500,-134 598,-134 598,-98 500,-98"/>
+<text text-anchor="middle" x="517" y="-117.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="535,-98 535,-134 "/>
+<text text-anchor="middle" x="545" y="-117.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+<polyline style="fill:none;stroke:black;" points="556,-98 556,-134 "/>
+<text text-anchor="middle" x="566" y="-117.4" style="font-family:Times New Roman;font-size:14.00;">(</text>
+<polyline style="fill:none;stroke:black;" points="577,-98 577,-134 "/>
+<text text-anchor="middle" x="587" y="-117.4" style="font-family:Times New Roman;font-size:14.00;">)</text>
+</g>
+<!-- sf3&#45;&gt;sf4 -->
+<!-- sf5 -->
+<g id="node20" class="node"><title>sf5</title>
+<polygon style="fill:none;stroke:black;" points="561,-8 561,-44 680,-44 680,-8 561,-8"/>
+<text text-anchor="middle" x="578" y="-27.4" style="font-family:Times New Roman;font-size:14.00;">int</text>
+<polyline style="fill:none;stroke:black;" points="596,-8 596,-44 "/>
+<text text-anchor="middle" x="606" y="-27.4" style="font-family:Times New Roman;font-size:14.00;">f</text>
+<polyline style="fill:none;stroke:black;" points="617,-8 617,-44 "/>
+<text text-anchor="middle" x="627" y="-27.4" style="font-family:Times New Roman;font-size:14.00;">(</text>
+<polyline style="fill:none;stroke:black;" points="638,-8 638,-44 "/>
+<text text-anchor="middle" x="648" y="-27.4" style="font-family:Times New Roman;font-size:14.00;">)</text>
+<polyline style="fill:none;stroke:black;" points="659,-8 659,-44 "/>
+<text text-anchor="middle" x="669" y="-27.4" style="font-family:Times New Roman;font-size:14.00;">;</text>
+</g>
+<!-- sf4&#45;&gt;sf5 -->
+<!-- tf1&#45;&gt;sf1 -->
+<g id="edge45" class="edge"><title>tf1&#45;&gt;sf1</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M654,-461C627,-449 590,-432 560,-410"/>
+<polygon style="fill:black;stroke:black;" points="562.1,-407.2 552,-404 557.9,-412.8 562.1,-407.2"/>
+<text text-anchor="middle" x="666" y="-426.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- tf2 -->
+<g id="node23" class="node"><title>tf2</title>
+<ellipse style="fill:none;stroke:black;" cx="693" cy="-386" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="693" y="-381.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- tf1&#45;&gt;tf2 -->
+<g id="edge10" class="edge"><title>tf1&#45;&gt;tf2</title>
+<path style="fill:none;stroke:black;" d="M711,-458C716,-453 720,-447 723,-440 725,-432 725,-429 723,-422 722,-419 720,-415 718,-412"/>
+<polygon style="fill:black;stroke:black;" points="720.8,-409.9 712,-404 715.2,-414.1 720.8,-409.9"/>
+</g>
+<!-- tf1_note -->
+<g id="node22" class="node"><title>tf1_note</title>
+<polygon style="fill:none;stroke:black;" points="841,-591 559,-591 559,-555 847,-555 847,-585 841,-591"/>
+<polyline style="fill:none;stroke:black;" points="841,-591 841,-585 "/>
+<polyline style="fill:none;stroke:black;" points="847,-585 841,-585 "/>
+<text text-anchor="middle" x="703" y="-568.9" style="font-family:Times New Roman;font-size:14.00;">&quot;int&quot; &quot;f&quot; &quot;(&quot; are read from tokens_vector</text>
+</g>
+<!-- tf1_note&#45;&gt;tf1 -->
+<g id="edge57" class="edge"><title>tf1_note&#45;&gt;tf1</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M701,-555C699,-541 698,-521 696,-504"/>
+<polygon style="fill:black;stroke:black;" points="699.478,-503.602 695,-494 692.512,-504.299 699.478,-503.602"/>
+</g>
+<!-- tf1_note&#45;&gt;tf2 -->
+<g id="edge59" class="edge"><title>tf1_note&#45;&gt;tf2</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M645,-555C631,-548 618,-539 609,-527 586,-495 599,-478 596,-440 596,-432 592,-428 596,-422 601,-415 616,-409 632,-403"/>
+<polygon style="fill:black;stroke:black;" points="634.015,-405.964 642,-399 631.415,-399.464 634.015,-405.964"/>
+</g>
+<!-- tf3 -->
+<g id="node24" class="node"><title>tf3</title>
+<ellipse style="fill:none;stroke:black;" cx="693" cy="-296" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="693" y="-291.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- tf1_note&#45;&gt;tf3 -->
+<g id="edge61" class="edge"><title>tf1_note&#45;&gt;tf3</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M747,-555C759,-548 770,-539 777,-527 811,-465 806,-432 777,-368 768,-348 749,-331 732,-319"/>
+<polygon style="fill:black;stroke:black;" points="733.262,-315.635 723,-313 729.379,-321.459 733.262,-315.635"/>
+</g>
+<!-- tf2&#45;&gt;sf2 -->
+<g id="edge47" class="edge"><title>tf2&#45;&gt;sf2</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M642,-373C618,-366 592,-358 582,-350 574,-343 568,-333 564,-324"/>
+<polygon style="fill:black;stroke:black;" points="566.964,-321.985 560,-314 560.464,-324.585 566.964,-321.985"/>
+<text text-anchor="middle" x="640" y="-336.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- tf2&#45;&gt;tf3 -->
+<g id="edge12" class="edge"><title>tf2&#45;&gt;tf3</title>
+<path style="fill:none;stroke:black;" d="M693,-368C693,-355 693,-339 693,-324"/>
+<polygon style="fill:black;stroke:black;" points="696.5,-324 693,-314 689.5,-324 696.5,-324"/>
+</g>
+<!-- tf3&#45;&gt;sf3 -->
+<g id="edge49" class="edge"><title>tf3&#45;&gt;sf3</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M638,-284C614,-278 590,-269 582,-260 576,-253 574,-243 574,-234"/>
+<polygon style="fill:black;stroke:black;" points="577.5,-234 574,-224 570.5,-234 577.5,-234"/>
+<text text-anchor="middle" x="639" y="-246.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- tf4 -->
+<g id="node25" class="node"><title>tf4</title>
+<ellipse style="fill:none;stroke:black;" cx="693" cy="-206" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="693" y="-201.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- tf3&#45;&gt;tf4 -->
+<g id="edge14" class="edge"><title>tf3&#45;&gt;tf4</title>
+<path style="fill:none;stroke:black;" d="M693,-278C693,-265 693,-249 693,-234"/>
+<polygon style="fill:black;stroke:black;" points="696.5,-234 693,-224 689.5,-234 696.5,-234"/>
+</g>
+<!-- tf4&#45;&gt;sf4 -->
+<g id="edge51" class="edge"><title>tf4&#45;&gt;sf4</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M650,-191C638,-188 626,-184 614,-180 600,-175 591,-182 582,-170 577,-163 576,-153 577,-144"/>
+<polygon style="fill:black;stroke:black;" points="580.479,-144.584 580,-134 573.774,-142.573 580.479,-144.584"/>
+<text text-anchor="middle" x="639" y="-156.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+<!-- tf5 -->
+<g id="node27" class="node"><title>tf5</title>
+<ellipse style="fill:none;stroke:black;" cx="693" cy="-116" rx="75.2406" ry="18"/>
+<text text-anchor="middle" x="693" y="-111.9" style="font-family:Times New Roman;font-size:14.00;"> token_next()</text>
+</g>
+<!-- tf4&#45;&gt;tf5 -->
+<g id="edge16" class="edge"><title>tf4&#45;&gt;tf5</title>
+<path style="fill:none;stroke:black;" d="M693,-188C693,-175 693,-159 693,-144"/>
+<polygon style="fill:black;stroke:black;" points="696.5,-144 693,-134 689.5,-144 696.5,-144"/>
+</g>
+<!-- tf4_note -->
+<g id="node26" class="node"><title>tf4_note</title>
+<polygon style="fill:none;stroke:black;" points="976,-404 824,-404 824,-368 982,-368 982,-398 976,-404"/>
+<polyline style="fill:none;stroke:black;" points="976,-404 976,-398 "/>
+<polyline style="fill:none;stroke:black;" points="982,-398 976,-398 "/>
+<text text-anchor="middle" x="903" y="-381.9" style="font-family:Times New Roman;font-size:14.00;">&quot;)&quot; is read from lexer</text>
+</g>
+<!-- tf4_note&#45;&gt;tf4 -->
+<g id="edge63" class="edge"><title>tf4_note&#45;&gt;tf4</title>
+<path style="fill:none;stroke:black;stroke-dasharray:1,5;" d="M882,-368C843,-335 763,-267 721,-231"/>
+<polygon style="fill:black;stroke:black;" points="722.831,-227.951 713,-224 718.221,-233.219 722.831,-227.951"/>
+</g>
+<!-- tf5&#45;&gt;sf5 -->
+<g id="edge53" class="edge"><title>tf5&#45;&gt;sf5</title>
+<path style="fill:none;stroke:black;stroke-dasharray:5,2;" d="M688,-98C685,-85 680,-68 677,-54"/>
+<polygon style="fill:black;stroke:black;" points="680.226,-52.5725 674,-44 673.521,-54.584 680.226,-52.5725"/>
+<text text-anchor="middle" x="736" y="-66.9" style="font-family:Times New Roman;font-size:14.00;">context.i_token</text>
+</g>
+</g>
+</svg>
+
+<!-- } extract of file[web_github_chunked_svg/images/chapter_parsing_token_next_buffer_01.svg] end-->
+</div></div></div><br class="figure-break" /><p>context have <span class="strong"><strong>i_token</strong></span> which is an index to the actual token, token_next() use
+<span class="strong"><strong>i_token</strong></span> to get tokens from buffer tokens_vector while i_token is &lt;
+tokens_vector.size()
+and when restore() is called <span class="strong"><strong>context.i_token</strong></span> points to <span class="strong"><strong>int</strong></span> again and
+then FUNCTION rule can parse the same tokens and ")" ";" too.</p><p>In some points of the grammar <span class="strong"><strong>tokens_vector_clear()</strong></span> can be called to clear
+the buffer but you must be sure that you won need those tokens anymore.</p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s02.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

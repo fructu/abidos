@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>7.2. Debugging Abidos</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html" title="Chapter 7. Recursive descent parser" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html" title="Chapter 7. Recursive descent parser" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s03.html" title="7.3. Meaningful parts of parser" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s03.html">Next</a></td></tr></table><hr /></div><div class="section" title="7.2. Debugging Abidos"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_debugging_abidos"></a>7.2. Debugging Abidos</h2></div></div></div><p>In order to see how Abidos works we will use gdb to trace an Abidos execution,
+in this session i introduce you some topics that will be explained more deeply
+in next chapters: context, translation rules from bison to descent form …</p><p>Abidos have an X file, it is used for debugging purposes with gdb:</p><pre class="screen">dir .
+set print address off
+b main
+run --includes test_includes/ \
+    --out_dir test_out/ \
+    --test_all_tokens_consumed_flag \
+    --test_original \
+    --ts_show \
+    --verbose --verbose test/book_01.cpp &gt; test_out/out_book_01.cpp.txt</pre><p><a id="id591035" class="indexterm"></a>
+<a id="id591043" class="indexterm"></a></p><p>We will use the same previous example:</p><p>Example</p><pre class="screen"><span class="strong"><strong>int</strong></span> a;</pre><p>Remember the tree graph with more than 40 nodes generated, and will see how
+abidos parses this and why the tree is so big.</p><p>Execute Abidos with gdb like this:</p><pre class="screen">abidos_cpp/processor$ gdb src/abidos_cpp -x X</pre><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>I like use X file, in this way i have all the begin commands in the file and is
+more easy execute gdb the next day.</p></td></tr></table></div><p>First the loader starts to work looking what files Abidos will parse.</p><p>The parser starts to work in this line of main.cpp:</p><pre class="screen">c_parser_descent parser;
+
+parser.yyparse(file_name);</pre><p>yyparser() function do:</p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>We will see here the most important rules from the parser tree, in the figure of
+trace tree there are more rules where Abidos can not match tokens.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+lex_file_init().
+</li><li class="listitem">
+a set of the ts (symbols table).
+</li><li class="listitem">
+And calls <span class="strong"><strong>translation_unit()</strong></span> the fist rule of C++ Grammar
+</li></ul></div><pre class="screen">    c_trace_node trace_node; <a id="CO9-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+    trace_node.set("translation_unit"); <a id="CO9-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" />
+
+    tokens_vector_clear(); <a id="CO9-3"></a><img src="images/icons/callouts/3.png" alt="3" border="0" />
+
+    <span class="strong"><strong>if</strong></span> (1 == declaration_seq_opt(trace_node)) { <a id="CO9-4"></a><img src="images/icons/callouts/4.png" alt="4" border="0" />
+        <span class="strong"><strong>return</strong></span> 1;
+    }
+    ...</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO9-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+Here starts the trace tree.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO9-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+With this trace system, Abidos knows which node is using in each step.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO9-3"><img src="images/icons/callouts/3.png" alt="3" border="0" /></a> </p></td><td valign="top" align="left"><p>
+This is the main rule of the grammar we start with a fresh tokens_vector.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO9-4"><img src="images/icons/callouts/4.png" alt="4" border="0" /></a> </p></td><td valign="top" align="left"><p>
+in the grammar appears "translation_unit: declaration_seq_opt;" and here is
+how write this rule in descent form is quite easy.
+</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+declaration_seq_opt rule.
+</li><li class="listitem">
+declaration_seq.
+</li></ul></div><pre class="screen">declaration_seq: declaration | declaration_seq declaration ;</pre><p>I translated this to the descent form:</p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::declaration_seq(c_trace_node trace_node)
+{
+    trace_graph.add(trace_node, "declaration_seq");
+
+    <span class="strong"><strong>int</strong></span> result = 0;
+
+    <span class="strong"><strong>while</strong></span> (1 == declaration(trace_node)) {
+        tokens_vector_clear();
+        result = 1;
+    }
+
+    <span class="strong"><strong>return</strong></span> result;
+}</pre><p>In a descent parser we can not have left recursion (in yacc we can and we want
+it)</p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>I clear the vector of tokens here, i think there is safe and not more
+backtracking will bee work with these tokens.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+Abidos goes to declaration rule
+</li></ul></div><p>Here we can see in the trace tree how Abidos enters in the rules:
+is_eof, extern_c, preprocessor, template_declaration and can not match the
+actual token <span class="strong"><strong>int</strong></span></p><p>the original rule is</p><pre class="screen">declaration: block_declaration | function_definition |
+  template_declaration | explicit_instantiation | explicit_specialization
+  | linkage_specification | namespace_definition ;</pre><p>i write it with changing his order of son rules because block_declaration is
+more cost to check it and i had to add some rules of my own:</p><p>1) is_eof, check if we are in the end of the file (we can cut the descent here).</p><p>2) preprocessor, in the original grammar do not have this rule, C++ have a
+external preprocessor and works before compile do, but Abidos do this sort of
+things in compile phase.</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+block_declaration rule.
+</li><li class="listitem">
+simple_declaration, this is a kind of rule not than easy than previous
+</li></ul></div><pre class="screen">  <span class="strong"><strong>if</strong></span> ( CLASS_SPECIFIER_STATUS_MEMBER_SPECIFIER
+        != context.class_specifier_status ) {
+    semantic.clear_decl_specifier();
+  }</pre><p>This lines are to know if Abidos is parsing a declaration inside a class scope
+or not, lets see this with a little example:</p><pre class="screen"><span class="strong"><strong>class</strong></span> A{
+  <span class="strong"><strong>int</strong></span> a;
+  <span class="strong"><strong>int</strong></span> f(<span class="strong"><strong>int</strong></span> i);
+}</pre><p>When Abidos parses <span class="strong"><strong>int a;</strong></span> this will be a part of A class like an attribute,
+but when Abidos are parsing <span class="strong"><strong>int i</strong></span> this will be a part of <span class="strong"><strong>f</strong></span> declaration not a
+part of A directly, this 2 variables <span class="strong"><strong>a</strong></span> and <span class="strong"><strong>i</strong></span> are parsed in the same rules
+and with the context Abidos know what they are.
+<a id="id591421" class="indexterm"></a></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>context allow Abidos to know where he is, and what is the semantic value of a
+token.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+decl_specifier_seq_opt
+</li><li class="listitem">
+decl_specifier_seq, a little hack in this rule to put in descent way,
+the original rule in left recursion fashion is:
+</li></ul></div><pre class="screen">decl_specifier_seq: decl_specifier_seq_opt decl_specifier;</pre><p>There is a indirect recursion by left calling <span class="strong"><strong>decl_specifier_seq_opt</strong></span> and
+this call decl_specifier_seq again. The goal of this recursion is iterating
+<span class="strong"><strong>decl_specifier</strong></span> for example "long int …", if i would write this rule exact
+like his original form i will have a stack overflow like this:</p><pre class="screen"><span class="emphasis"><em>//</em></span>
+<span class="emphasis"><em>// i drop the indirect recursion for establish a clear example</em></span>
+<span class="emphasis"><em>// the execution is quite similar</em></span>
+<span class="emphasis"><em>//</em></span>
+<span class="strong"><strong>int</strong></span> decl_specifier_seq(<span class="strong"><strong>void</strong></span>)
+{
+  decl_specifier_seq(); <a id="CO10-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+  decl_specifier(); <a id="CO10-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" />
+}</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO10-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+program call this one time, and again and again … until stack overflow.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO10-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+program never reach this line
+</p></td></tr></table></div><p>The easy solution taken in Abidos is:</p><pre class="screen">    <span class="strong"><strong>while</strong></span> (1 == decl_specifier(trace_node)) { <a id="CO11-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+        result = 1;
+    }</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO11-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+iteration over <span class="strong"><strong>decl_specifier</strong></span> reached with a while.
+</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+decl_specifier, here we can see another trick
+</li></ul></div></td></tr></table></div><pre class="screen">    <span class="strong"><strong>const</strong></span> <span class="strong"><strong>int</strong></span> vector_id[]={';' , ')', COLONCOLON,IDENTIFIER, '~', '#', -1};
+    <span class="strong"><strong>if</strong></span> (preanalisys_has_one(  vector_id,trace_node) ) {
+        <span class="strong"><strong>return</strong></span> 0;
+    }</pre><p>With this lines of code we can <span class="strong"><strong>prune</strong></span> sub-trees and Abidos save resources
+in this rule we know that a <span class="strong"><strong>decl</strong></span> can not be a <span class="strong"><strong>#</strong></span> or a <span class="strong"><strong>;</strong></span> therefore if some
+of this symbols are present we prune and does not get more deep.
+<a id="id591636" class="indexterm"></a>
+<a id="id591644" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+type_specifier
+</li><li class="listitem">
+simple_type_specifier, here is a lot of things but where <span class="strong"><strong>int</strong></span> is matched is
+in this lines
+</li></ul></div><pre class="screen">    <span class="strong"><strong>const</strong></span> <span class="strong"><strong>int</strong></span> vector_id[]={
+        CHAR, WCHAR_T, BOOL, SHORT, INT, LONG
+        , SIGNED, UNSIGNED, FLOAT, DOUBLE, VOID, -1
+    };
+
+    <span class="strong"><strong>if</strong></span> (token_is_one(vector_id,trace_node) != 0) { <a id="CO12-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+        result = 1;
+    }</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO12-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+<span class="strong"><strong>int</strong></span> is matched here and this method, this method calls <span class="strong"><strong>is_one</strong></span> and this
+calls trace_graph.token_is_add here.
+</p></td></tr></table></div><p>Then there are a lot of code about scopes of classes and templates parsing that
+will see forward for this example is not used.</p><p>Abidos put the decl <span class="strong"><strong>int</strong></span> in the semantic class.</p><pre class="screen">  semantic.push_back_vector_decl_specifier(decl);</pre><p>And this rule returns 1 indicating success, and In this case int should
+be consumed therefore <span class="strong"><strong>context = context_tokens.restore();</strong></span> are not used
+to restore the context and forcing to process <span class="strong"><strong>int</strong></span> again with other rules.</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+decl_specifier_seq, Abidos try to iterates again with decl_specifier but
+now <span class="strong"><strong>i</strong></span> token is an IDENTIFIER.
+</li><li class="listitem">
+init_declarator_list_opt
+</li><li class="listitem">
+init_declarator_list, in this rule we can see another trick to development
+rules in descent form:
+</li></ul></div><pre class="screen">    c_context_tokens context_tokens(context); <a id="CO13-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+    c_context_tokens context_good_way(context); <a id="CO13-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO13-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+here Abidos save context to restore it if the rule don not match the token.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO13-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+here is another context saver in a declaration.
+</p></td></tr></table></div><p>Lets see this last point C++ allows to put 1 or more, IDENTIFIERS separated by
+<span class="strong"><strong>,</strong></span> for example</p><pre class="screen">  <span class="strong"><strong>int</strong></span> a, b, c;</pre><p>I use <span class="strong"><strong>;</strong></span> like a terminator for this rule but i should restore put the token <span class="strong"><strong>;</strong></span>
+on the context queue again to be parsed in <span class="strong"><strong>simple_declaration</strong></span> rule, for that
+is this if:</p><pre class="screen">        <span class="strong"><strong>if</strong></span> ( token_is(';', trace_node) ) {
+            <span class="emphasis"><em>// yes i restore here to consume ';' more up in the tree</em></span>
+            context = context_good_way.restore();
+            <span class="strong"><strong>return</strong></span> 1;
+        }</pre><p>And Abidos prune this rule with that.</p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>I would use <span class="strong"><strong>preanalisys_has_one</strong></span> to do this prune but is a little more
+inefficiency because it saves and restores the context in each check.</p></td></tr></table></div><p><a id="id591906" class="indexterm"></a>
+<a id="id591914" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+init_declarator
+</li><li class="listitem">
+declarator
+</li><li class="listitem">
+direct_declarator, there are a lot of code here but in this case it calls
+next rule.
+</li><li class="listitem">
+declarator_id, this rule is uses to declare constructors too, but now it calls
+next rule.
+<a id="id591951" class="indexterm"></a>
+</li><li class="listitem">
+id_expression
+</li><li class="listitem">
+unqualified_id, this rule is used to declare destructors, but now it calls
+next rule.
+<a id="id591974" class="indexterm"></a>
+</li><li class="listitem">
+identifier, Abidos put the identifier in the semantic
+</li></ul></div><pre class="screen">  semantic.identifier(context, c_token_get());</pre></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

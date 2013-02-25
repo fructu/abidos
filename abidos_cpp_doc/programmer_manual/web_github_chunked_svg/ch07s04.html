@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>7.4. How do token_get() token_next() do their work ?</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html" title="Chapter 7. Recursive descent parser" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s03.html" title="7.3. Meaningful parts of parser" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch08.html" title="Chapter 8. Trace system" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s03.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch08.html">Next</a></td></tr></table><hr /></div><div class="section" title="7.4. How do token_get() token_next() do their work ?"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_how_do_token_get_token_next_do_their_work"></a>7.4. How do token_get() token_next() do their work ?</h2></div></div></div><p>Now we already know that this is a very important method of Parser lets go to
+see what others things do.</p><p>We studied in mangling chapter, we can have in the symbols table "A::B" to
+store a class B declared in this form:</p><pre class="screen"><span class="strong"><strong>class</strong></span> A
+{
+  <span class="strong"><strong>class</strong></span> B
+  {
+    <span class="strong"><strong>public</strong></span>:
+      <span class="strong"><strong>void</strong></span> f(<span class="strong"><strong>void</strong></span>);
+  };
+};
+
+A::B b; <a id="CO16-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO16-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+in this case the lexer would pass to parser the tokens "A" "::" "B" parser
+joins these tokens to have an class identifier "A::B" that if search in
+symbols table it would returns the related class.
+</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+token_get()
+</li></ul></div><p>First we need see the pseudo-code of token_get():
+<a id="id592817" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>int</strong></span> token_get()
+{
+  <span class="strong"><strong>return</strong></span> tokens_vector[context.i_token].id;
+}</pre><p>We can see that the <span class="strong"><strong>context.i_token</strong></span> points to the actual token in this state
+or node in the syntax tree.</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+token_next()
+</li></ul></div><p>The pseudo-code of token_next is:
+<a id="id592863" class="indexterm"></a></p><pre class="screen">token_next()
+{
+  <span class="strong"><strong>if</strong></span>( context.i_token &lt; tokens_vector.size() ) {
+    ++context.i_token;
+    <span class="strong"><strong>return</strong></span>;
+  }
+
+  t = yylex(); <a id="CO17-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
+
+  <span class="strong"><strong>while</strong></span>(1) {
+    check_abidos_command(t); <a id="CO17-2"></a><img src="images/icons/callouts/2.png" alt="2" border="0" />
+    <span class="strong"><strong>switch</strong></span> drop_head_namespace(tab, token) {
+      0: <span class="strong"><strong>break</strong></span>;
+      1: <span class="strong"><strong>continue</strong></span>; <span class="emphasis"><em>// in using namespace</em></span>
+      2: <span class="strong"><strong>return</strong></span>;   <span class="emphasis"><em>// is in using namespace but not is a N::</em></span>
+    }
+  }
+
+  colon_colon_chain_process(token); <a id="CO17-3"></a><img src="images/icons/callouts/3.png" alt="3" border="0" />
+
+  <span class="strong"><strong>if</strong></span> (IDENTIFIER == t) {
+    check_identifier(tab, token);
+  }
+
+  tokens_vector.push_back(token);
+
+  context.i_token = (tokens_vector.size() - 1);
+
+  <span class="strong"><strong>return</strong></span>;
+}</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO17-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
+reached this point the tokens is read from lexer.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO17-2"><img src="images/icons/callouts/2.png" alt="2" border="0" /></a> </p></td><td valign="top" align="left"><p>
+maybe is an internal command of Abidos.
+</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#CO17-3"><img src="images/icons/callouts/3.png" alt="3" border="0" /></a> </p></td><td valign="top" align="left"><p>
+put in the string attribute <span class="strong"><strong>colon_colon_chain</strong></span> consecutive tokens
+like <span class="strong"><strong>A::B</strong></span> uses in check_identifier().
+</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+drop_head_namespace()
+</li></ul></div><p><a id="id593002" class="indexterm"></a></p><p>when we have something like:</p><pre class="screen"><span class="strong"><strong>using</strong></span> <span class="strong"><strong>namespace</strong></span> N;
+
+<span class="strong"><strong>class</strong></span> B{
+  C n1;
+  N::C n2;
+};</pre><p>Abidos cuts <span class="strong"><strong>N::</strong></span> because is reconstructing more later
+in <span class="strong"><strong>void c_parser_descent::check_identifier()</strong></span>
+because N is in the vector <span class="strong"><strong>semantic.vector_using_namespace</strong></span></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>This will change in the future because is a work-around.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+check_identifier()
+</li></ul></div><p><a id="id593070" class="indexterm"></a></p><p>Lexer not distinguish between IDENTIFIER and CLASS_NAME because lexer does not
+check that with the symbols table therefore parser do it in this method.</p><pre class="screen">check_identifier()
+{
+    <span class="strong"><strong>if</strong></span> ( 1 == identifier_search_with_type(tab, yytext, token) ) {
+        <span class="strong"><strong>return</strong></span>;
+    }
+
+    <span class="emphasis"><em>//from this point i cut the code because is too much long</em></span>
+    <span class="emphasis"><em>//and you can search it in the code src/parser_descent.cpp</em></span>
+
+    check destructors A::B::~B() <span class="strong"><strong>using</strong></span> chain_is_tail()
+
+    check <span class="strong"><strong>if</strong></span> is <span class="strong"><strong>template</strong></span> type <span class="emphasis"><em>// template &lt;class T&gt; --&gt; T</em></span>
+
+    check declarations of members functions outside of his <span class="strong"><strong>class</strong></span>
+      but inside of the <span class="strong"><strong>namespace</strong></span>
+
+    check the <span class="strong"><strong>using</strong></span> <span class="strong"><strong>namespace</strong></span>
+
+    check context.namespace_name_declaration + "::" + yytext;
+
+    check <span class="strong"><strong>class</strong></span> defined inside the current <span class="strong"><strong>class</strong></span>
+
+    check preprocessor hack "#" + yytext;
+}</pre></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s03.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch08.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
