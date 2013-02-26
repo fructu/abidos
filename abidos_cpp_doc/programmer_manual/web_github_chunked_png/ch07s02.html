@@ -10,8 +10,8 @@ run --includes test_includes/ \
     --test_all_tokens_consumed_flag \
     --test_original \
     --ts_show \
-    --verbose --verbose test/book_01.cpp &gt; test_out/out_book_01.cpp.txt</pre><p><a id="id343503" class="indexterm"></a>
-<a id="id343511" class="indexterm"></a></p><p>We will use the same previous example:</p><p>Example</p><pre class="screen"><span class="strong"><strong>int</strong></span> a;</pre><p>Remember the tree graph with more than 40 nodes generated, and will see how
+    --verbose --verbose test/book_01.cpp &gt; test_out/out_book_01.cpp.txt</pre><p><a id="id442744" class="indexterm"></a>
+<a id="id442753" class="indexterm"></a></p><p>We will use the same previous example:</p><p>Example</p><pre class="screen"><span class="strong"><strong>int</strong></span> a;</pre><p>Remember the tree graph with more than 40 nodes generated, and will see how
 abidos parses this and why the tree is so big.</p><p>Execute Abidos with gdb like this:</p><pre class="screen">abidos_cpp/processor$ gdb src/abidos_cpp -x X</pre><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>I like use X file, in this way i have all the begin commands in the file and is
 more easy execute gdb the next day.</p></td></tr></table></div><p>First the loader starts to work looking what files Abidos will parse.</p><p>The parser starts to work in this line of main.cpp:</p><pre class="screen">c_parser_descent parser;
 
@@ -81,7 +81,7 @@ or not, lets see this with a little example:</p><pre class="screen"><span class=
 but when Abidos are parsing <span class="strong"><strong>int i</strong></span> this will be a part of <span class="strong"><strong>f</strong></span> declaration not a
 part of A directly, this 2 variables <span class="strong"><strong>a</strong></span> and <span class="strong"><strong>i</strong></span> are parsed in the same rules
 and with the context Abidos know what they are.
-<a id="id343889" class="indexterm"></a></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>context allow Abidos to know where he is, and what is the semantic value of a
+<a id="id443129" class="indexterm"></a></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>context allow Abidos to know where he is, and what is the semantic value of a
 token.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 decl_specifier_seq_opt
 </li><li class="listitem">
@@ -114,8 +114,8 @@ decl_specifier, here we can see another trick
     }</pre><p>With this lines of code we can <span class="strong"><strong>prune</strong></span> sub-trees and Abidos save resources
 in this rule we know that a <span class="strong"><strong>decl</strong></span> can not be a <span class="strong"><strong>#</strong></span> or a <span class="strong"><strong>;</strong></span> therefore if some
 of this symbols are present we prune and does not get more deep.
-<a id="id344104" class="indexterm"></a>
-<a id="id344112" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<a id="id443344" class="indexterm"></a>
+<a id="id443352" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 type_specifier
 </li><li class="listitem">
 simple_type_specifier, here is a lot of things but where <span class="strong"><strong>int</strong></span> is matched is
@@ -154,8 +154,8 @@ is this if:</p><pre class="screen">        <span class="strong"><strong>if</stro
             context = context_good_way.restore();
             <span class="strong"><strong>return</strong></span> 1;
         }</pre><p>And Abidos prune this rule with that.</p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>I would use <span class="strong"><strong>preanalisys_has_one</strong></span> to do this prune but is a little more
-inefficiency because it saves and restores the context in each check.</p></td></tr></table></div><p><a id="id344374" class="indexterm"></a>
-<a id="id344382" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+inefficiency because it saves and restores the context in each check.</p></td></tr></table></div><p><a id="id443614" class="indexterm"></a>
+<a id="id443622" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 init_declarator
 </li><li class="listitem">
 declarator
@@ -165,13 +165,13 @@ next rule.
 </li><li class="listitem">
 declarator_id, this rule is uses to declare constructors too, but now it calls
 next rule.
-<a id="id344420" class="indexterm"></a>
+<a id="id443660" class="indexterm"></a>
 </li><li class="listitem">
 id_expression
 </li><li class="listitem">
 unqualified_id, this rule is used to declare destructors, but now it calls
 next rule.
-<a id="id344442" class="indexterm"></a>
+<a id="id443682" class="indexterm"></a>
 </li><li class="listitem">
 identifier, Abidos put the identifier in the semantic
 </li></ul></div><pre class="screen">  semantic.identifier(context, c_token_get());</pre></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch07.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch07s03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
