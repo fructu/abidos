@@ -9,13 +9,13 @@ you can see how all rules pass trace_node and add it to trace_graph</p><pre clas
 }</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO18-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 that is how trace system knows what rule has been called.
 </p></td></tr></table></div><p>c_trace_graph trace_graph
-<a id="id562504" class="indexterm"></a>
-<a id="id562513" class="indexterm"></a>
-<a id="id562521" class="indexterm"></a>
-<a id="id562530" class="indexterm"></a></p><p>Here is the output tree drawn by Abidos trace system for the previous example:</p><div class="figure"><a id="id562542"></a><p class="title"><b>Figure 8.1. trace tree example</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_trace_examples_trace_book_01.cpp.png" align="middle" alt="images/chapter_trace_examples_trace_book_01.cpp.png" /></div></div></div><br class="figure-break" /><p>Is a super-set of an <span class="strong"><strong>annotated parse tree</strong></span> we can see the successfully
+<a id="id345670" class="indexterm"></a>
+<a id="id345678" class="indexterm"></a>
+<a id="id345687" class="indexterm"></a>
+<a id="id345695" class="indexterm"></a></p><p>Here is the output tree drawn by Abidos trace system for the previous example:</p><div class="figure"><a id="id345707"></a><p class="title"><b>Figure 8.1. trace tree example</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_trace_examples_trace_book_01.cpp.png" align="middle" alt="images/chapter_trace_examples_trace_book_01.cpp.png" /></div></div></div><br class="figure-break" /><p>Is a super-set of an <span class="strong"><strong>annotated parse tree</strong></span> we can see the successfully
 branches and the unsuccessfully.
-<a id="id562575" class="indexterm"></a>
-<a id="id562583" class="indexterm"></a></p><p>Nodes begin with <span class="emphasis"><em>&lt;number&gt;</em></span>: is the order in which abidos have processed it.</p><p>Shape of nodes have these meanings:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<a id="id345740" class="indexterm"></a>
+<a id="id345748" class="indexterm"></a></p><p>Nodes begin with <span class="emphasis"><em>&lt;number&gt;</em></span>: is the order in which abidos have processed it.</p><p>Shape of nodes have these meanings:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 ellipsis, are non terminal rules, like this
 </li></ul></div><pre class="screen">declaration_seq:
         declaration
@@ -26,11 +26,11 @@ terminal rules too, perimeter line of nodes have these meanings:
 </li></ul></div><p>1) dotted in this nodes the terminals not matched, for example in:</p><pre class="screen">      _13_template_declaration
       int is not TEMPLATE <a id="CO19-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO19-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 Abidos was trying to match "int" with the reserved word "TEMPLATE".
-<a id="id562654" class="indexterm"></a>
+<a id="id345819" class="indexterm"></a>
 </p></td></tr></table></div><p>2) green line: in this nodes some terminals matched, for example in:</p><pre class="screen">      _15_simple_declaration
       ; is ; <a id="CO20-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO20-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 Abidos was trying to match ";" with ";" and it matched.
-<a id="id562688" class="indexterm"></a>
+<a id="id345853" class="indexterm"></a>
 </p></td></tr></table></div><p>You can see parsing a little example like that generate a tree with more than 40
 nodes, descent parsing is more inefficient than yacc parsing, but i will try
 to improve this with pruning methods. And remember C++ is a complex grammar to
@@ -38,4 +38,4 @@ do in yacc because is a tough task write his grammar using LALR.</p><p>If you wa
 or at least branches where some tokens has been matched because in some example
 one successfully branch can be the son of a node pruned by backtracking and
 Abidos shows it. You can open the <span class="strong"><strong>_pruned</strong></span> version like this:
-<a id="id562720" class="indexterm"></a></p><div class="figure"><a id="id562728"></a><p class="title"><b>Figure 8.2. trace tree pruned example</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_trace_examples_trace_book_01.cpp_pruned.png" align="middle" alt="images/chapter_trace_examples_trace_book_01.cpp_pruned.png" /></div></div></div><br class="figure-break" /></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch07s04.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch09.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
+<a id="id345885" class="indexterm"></a></p><div class="figure"><a id="id345894"></a><p class="title"><b>Figure 8.2. trace tree pruned example</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_trace_examples_trace_book_01.cpp_pruned.png" align="middle" alt="images/chapter_trace_examples_trace_book_01.cpp_pruned.png" /></div></div></div><br class="figure-break" /></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch07s04.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch09.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

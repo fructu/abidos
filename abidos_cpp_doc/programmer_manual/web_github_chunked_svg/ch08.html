@@ -9,10 +9,10 @@ you can see how all rules pass trace_node and add it to trace_graph</p><pre clas
 }</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO18-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 that is how trace system knows what rule has been called.
 </p></td></tr></table></div><p>c_trace_graph trace_graph
-<a id="id452795" class="indexterm"></a>
-<a id="id452804" class="indexterm"></a>
-<a id="id452812" class="indexterm"></a>
-<a id="id452820" class="indexterm"></a></p><p>Here is the output tree drawn by Abidos trace system for the previous example:</p><div class="figure"><a id="id452833"></a><p class="title"><b>Figure 8.1. trace tree example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<a id="id393333" class="indexterm"></a>
+<a id="id393342" class="indexterm"></a>
+<a id="id393350" class="indexterm"></a>
+<a id="id393359" class="indexterm"></a></p><p>Here is the output tree drawn by Abidos trace system for the previous example:</p><div class="figure"><a id="id393371"></a><p class="title"><b>Figure 8.1. trace tree example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_trace_examples_trace_book_01.cpp.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -545,8 +545,8 @@ that is how trace system knows what rule has been called.
 <!-- } extract of file[web_github_chunked_svg/images/chapter_trace_examples_trace_book_01.cpp.svg] end-->
 </div></div></div><br class="figure-break" /><p>Is a super-set of an <span class="strong"><strong>annotated parse tree</strong></span> we can see the successfully
 branches and the unsuccessfully.
-<a id="id452866" class="indexterm"></a>
-<a id="id452874" class="indexterm"></a></p><p>Nodes begin with <span class="emphasis"><em>&lt;number&gt;</em></span>: is the order in which abidos have processed it.</p><p>Shape of nodes have these meanings:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<a id="id393404" class="indexterm"></a>
+<a id="id393412" class="indexterm"></a></p><p>Nodes begin with <span class="emphasis"><em>&lt;number&gt;</em></span>: is the order in which abidos have processed it.</p><p>Shape of nodes have these meanings:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 ellipsis, are non terminal rules, like this
 </li></ul></div><pre class="screen">declaration_seq:
         declaration
@@ -557,11 +557,11 @@ terminal rules too, perimeter line of nodes have these meanings:
 </li></ul></div><p>1) dotted in this nodes the terminals not matched, for example in:</p><pre class="screen">      _13_template_declaration
       int is not TEMPLATE <a id="CO19-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO19-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 Abidos was trying to match "int" with the reserved word "TEMPLATE".
-<a id="id452945" class="indexterm"></a>
+<a id="id393483" class="indexterm"></a>
 </p></td></tr></table></div><p>2) green line: in this nodes some terminals matched, for example in:</p><pre class="screen">      _15_simple_declaration
       ; is ; <a id="CO20-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO20-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 Abidos was trying to match ";" with ";" and it matched.
-<a id="id452979" class="indexterm"></a>
+<a id="id393517" class="indexterm"></a>
 </p></td></tr></table></div><p>You can see parsing a little example like that generate a tree with more than 40
 nodes, descent parsing is more inefficient than yacc parsing, but i will try
 to improve this with pruning methods. And remember C++ is a complex grammar to
@@ -569,7 +569,7 @@ do in yacc because is a tough task write his grammar using LALR.</p><p>If you wa
 or at least branches where some tokens has been matched because in some example
 one successfully branch can be the son of a node pruned by backtracking and
 Abidos shows it. You can open the <span class="strong"><strong>_pruned</strong></span> version like this:
-<a id="id453011" class="indexterm"></a></p><div class="figure"><a id="id453019"></a><p class="title"><b>Figure 8.2. trace tree pruned example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<a id="id393549" class="indexterm"></a></p><div class="figure"><a id="id393557"></a><p class="title"><b>Figure 8.2. trace tree pruned example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_trace_examples_trace_book_01.cpp_pruned.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"

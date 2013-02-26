@@ -8,11 +8,15 @@ abidos_cpp and there is documentation in abidos_cpp_doc.
 
 * abidos_cpp:
 
-** user manual web (svg pictures): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked/index.html
+** man pages: http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/linux_man/abidos_cpp.1.html[man pages] 
 
-** programmer manual web (svg pictures): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html
+** user manual web (svg pictures): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked_svg/index.html[user manual web (svg pictures)]
 
-** programmer manual web (no svg pictures): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/index.html
+** user manual web (no svg): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/user_manual/web_chunked_png/index.html[user manual web (no svg pictures)]
+
+** programmer manual web (svg pictures): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html[programmer manual web (svg pictures)]
+
+** programmer manual web (no svg pictures): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/index.html[programmer manual web (no svg pictures)]
 
 ** user manual pdf: http://abidos-cpp.googlecode.com/files/abidos_cpp_user_manual_draft_0.02.pdf
 
