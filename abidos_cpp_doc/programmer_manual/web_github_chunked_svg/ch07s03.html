@@ -5,8 +5,8 @@ are the core of the project and understand them is a <span class="strong"><stron
 Abidos.</p><p>Parser function token_next() uses yylex() function to get tokens from lexer, but
 parser needs a buffer to store these tokens and tokens_vector is that buffer. To
 explain this more deeply lets see an example.
-<a id="id429106" class="indexterm"></a>
-<a id="id429114" class="indexterm"></a></p><p>Abidos have a big grammar because C++ is a complex language, the first step is
+<a id="id415226" class="indexterm"></a>
+<a id="id415235" class="indexterm"></a></p><p>Abidos have a big grammar because C++ is a complex language, the first step is
 hack that grammar and do a little grammar in order to have a clear explanation,
 the mechanics of the whole set of Abidos rules are the same. we will work with
 this little grammar:</p><pre class="screen">S -&gt; VARIABLE | FUNCTION
@@ -117,7 +117,7 @@ FUNCTION rule
 
     <span class="strong"><strong>return</strong></span> 1;
 }</pre><p>This rule is pretty similar to the previous one except in this rule we need
-match <span class="strong"><strong>"("</strong></span> and <span class="strong"><strong>")"</strong></span> before <span class="strong"><strong>";"</strong></span>.</p><p>Lets see an example of a variable declaration:</p><pre class="screen"><span class="strong"><strong>int</strong></span> i;</pre><p>We can see how all the tokens are matched in the VARIABLE rule.</p><div class="figure"><a id="id429553"></a><p class="title"><b>Figure 7.3. variable trace tree</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+match <span class="strong"><strong>"("</strong></span> and <span class="strong"><strong>")"</strong></span> before <span class="strong"><strong>";"</strong></span>.</p><p>Lets see an example of a variable declaration:</p><pre class="screen"><span class="strong"><strong>int</strong></span> i;</pre><p>We can see how all the tokens are matched in the VARIABLE rule.</p><div class="figure"><a id="id415674"></a><p class="title"><b>Figure 7.3. variable trace tree</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_parsing_trace_book_little_grammar_variable.cpp.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -155,7 +155,7 @@ match <span class="strong"><strong>"("</strong></span> and <span class="strong">
 
 <!-- } extract of file[web_github_chunked_svg/images/chapter_parsing_trace_book_little_grammar_variable.cpp.svg] end-->
 </div></div></div><br class="figure-break" /><p>Now lets see an example of a function declaration:</p><pre class="screen"><span class="strong"><strong>int</strong></span> f();</pre><p>now the VARIABLE rule does not match all the tokens and Abidos executes the
-another rule FUNCTION.</p><div class="figure"><a id="id429596"></a><p class="title"><b>Figure 7.4. function trace tree</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+another rule FUNCTION.</p><div class="figure"><a id="id415716"></a><p class="title"><b>Figure 7.4. function trace tree</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_parsing_trace_book_little_grammar_function.cpp.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -214,13 +214,13 @@ work token_next() use <span class="strong"><strong>tokens_vector</strong></span>
 in <span class="strong"><strong>context.i_token</strong></span> therefore <span class="strong"><strong>int f "("</strong></span> are processed another time,
 when <span class="strong"><strong>"("</strong></span> is read the next time token_next() is called it calls <span class="strong"><strong>yylex()</strong></span>
 to obtain <span class="strong"><strong>")"</strong></span> from lexer because <span class="strong"><strong>context.i_token</strong></span> reaches the end
-of <span class="strong"><strong>tokens_vector</strong></span>.</p><p><a id="id429697" class="indexterm"></a>
-<a id="id429706" class="indexterm"></a>
-<a id="id429716" class="indexterm"></a>
-<a id="id429725" class="indexterm"></a>
-<a id="id429735" class="indexterm"></a></p><p>In the next diagram we can see how S calls VARIABLE rule and inside of the rule
+of <span class="strong"><strong>tokens_vector</strong></span>.</p><p><a id="id415818" class="indexterm"></a>
+<a id="id415827" class="indexterm"></a>
+<a id="id415837" class="indexterm"></a>
+<a id="id415846" class="indexterm"></a>
+<a id="id415856" class="indexterm"></a></p><p>In the next diagram we can see how S calls VARIABLE rule and inside of the rule
 execute the <span class="strong"><strong>token_next()</strong></span> in order to obtain the tokens from lexer and putting
-them in the queue <span class="strong"><strong>tokens_vector</strong></span>.</p><div class="figure"><a id="id429760"></a><p class="title"><b>Figure 7.5. token_next() calls and buffer changes</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+them in the queue <span class="strong"><strong>tokens_vector</strong></span>.</p><div class="figure"><a id="id415881"></a><p class="title"><b>Figure 7.5. token_next() calls and buffer changes</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_parsing_token_next_buffer_01.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
