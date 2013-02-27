@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 8. Trace system</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s04.html" title="7.4. How do token_get() token_next() do their work ?" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch09.html" title="Chapter 9. Context" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s04.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch09.html">Next</a></td></tr></table><hr /></div><div class="chapter" title="Chapter 8. Trace system"><div class="titlepage"><div><div><h2 class="title"><a id="_trace_system"></a>Chapter 8. Trace system</h2></div></div></div><p>Abidos when finishes the parsing process can generates a diagram tree with
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 8. Trace system</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s04.html" title="7.4. How do token_get() token_next() do their work ?" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch09.html" title="Chapter 9. Context" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch07s04.html">Prev</a> </td><th width="60%" align="center"><a accesskey="r" href="https://github.com/fructu/abidos">github</a> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch09.html">Next</a></td></tr></table><hr /></div><div class="chapter" title="Chapter 8. Trace system"><div class="titlepage"><div><div><h2 class="title"><a id="_trace_system"></a>Chapter 8. Trace system</h2></div></div></div><p>Abidos when finishes the parsing process can generates a diagram tree with
 the rules used, you should use it only with small examples. In c_parser_descent
 you can see how all rules pass trace_node and add it to trace_graph</p><pre class="screen">int c_parser_descent::extern_c(c_trace_node trace_node)
 {
@@ -9,10 +9,10 @@ you can see how all rules pass trace_node and add it to trace_graph</p><pre clas
 }</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO18-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 that is how trace system knows what rule has been called.
 </p></td></tr></table></div><p>c_trace_graph trace_graph
-<a id="id378613" class="indexterm"></a>
-<a id="id378621" class="indexterm"></a>
-<a id="id378629" class="indexterm"></a>
-<a id="id378638" class="indexterm"></a></p><p>Here is the output tree drawn by Abidos trace system for the previous example:</p><div class="figure"><a id="id378650"></a><p class="title"><b>Figure 8.1. trace tree example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<a id="id488339" class="indexterm"></a>
+<a id="id488347" class="indexterm"></a>
+<a id="id488356" class="indexterm"></a>
+<a id="id488364" class="indexterm"></a></p><p>Here is the output tree drawn by Abidos trace system for the previous example:</p><div class="figure"><a id="id488376"></a><p class="title"><b>Figure 8.1. trace tree example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_trace_examples_trace_book_01.cpp.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -545,8 +545,8 @@ that is how trace system knows what rule has been called.
 <!-- } extract of file[web_github_chunked_svg/images/chapter_trace_examples_trace_book_01.cpp.svg] end-->
 </div></div></div><br class="figure-break" /><p>Is a super-set of an <span class="strong"><strong>annotated parse tree</strong></span> we can see the successfully
 branches and the unsuccessfully.
-<a id="id378683" class="indexterm"></a>
-<a id="id378691" class="indexterm"></a></p><p>Nodes begin with <span class="emphasis"><em>&lt;number&gt;</em></span>: is the order in which abidos have processed it.</p><p>Shape of nodes have these meanings:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<a id="id488409" class="indexterm"></a>
+<a id="id488418" class="indexterm"></a></p><p>Nodes begin with <span class="emphasis"><em>&lt;number&gt;</em></span>: is the order in which abidos have processed it.</p><p>Shape of nodes have these meanings:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 ellipsis, are non terminal rules, like this
 </li></ul></div><pre class="screen">declaration_seq:
         declaration
@@ -557,11 +557,11 @@ terminal rules too, perimeter line of nodes have these meanings:
 </li></ul></div><p>1) dotted in this nodes the terminals not matched, for example in:</p><pre class="screen">      _13_template_declaration
       int is not TEMPLATE <a id="CO19-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO19-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 Abidos was trying to match "int" with the reserved word "TEMPLATE".
-<a id="id378762" class="indexterm"></a>
+<a id="id488488" class="indexterm"></a>
 </p></td></tr></table></div><p>2) green line: in this nodes some terminals matched, for example in:</p><pre class="screen">      _15_simple_declaration
       ; is ; <a id="CO20-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" /></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO20-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 Abidos was trying to match ";" with ";" and it matched.
-<a id="id378796" class="indexterm"></a>
+<a id="id488522" class="indexterm"></a>
 </p></td></tr></table></div><p>You can see parsing a little example like that generate a tree with more than 40
 nodes, descent parsing is more inefficient than yacc parsing, but i will try
 to improve this with pruning methods. And remember C++ is a complex grammar to
@@ -569,7 +569,7 @@ do in yacc because is a tough task write his grammar using LALR.</p><p>If you wa
 or at least branches where some tokens has been matched because in some example
 one successfully branch can be the son of a node pruned by backtracking and
 Abidos shows it. You can open the <span class="strong"><strong>_pruned</strong></span> version like this:
-<a id="id378828" class="indexterm"></a></p><div class="figure"><a id="id378837"></a><p class="title"><b>Figure 8.2. trace tree pruned example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<a id="id488554" class="indexterm"></a></p><div class="figure"><a id="id488563"></a><p class="title"><b>Figure 8.2. trace tree pruned example</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_trace_examples_trace_book_01.cpp_pruned.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
