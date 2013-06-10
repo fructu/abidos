@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>2.2. Files generated automatically</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch02.html" title="Chapter 2. Making" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch02.html" title="Chapter 2. Making" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch02s03.html" title="2.3. Compilation &amp; linking stages" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch02.html">Prev</a> </td><th width="60%" align="center"><a accesskey="r" href="https://github.com/fructu/abidos">github</a> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/ch02s03.html">Next</a></td></tr></table><hr /></div><div class="section" title="2.2. Files generated automatically"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_files_generated_automatically"></a>2.2. Files generated automatically</h2></div></div></div><p>I am going to describe you how the builder scripts generate files needed by
 Abidos. These scripts are located in processor/scripts/ directory.</p><p>When you have configured Abidos C++ a Makefile was generated, you can invoke:</p><pre class="screen">make all</pre><p>You can see in this diagram the scripts needed by make with his input files and
-his output files.</p><div class="figure"><a id="id2992070"></a><p class="title"><b>Figure 2.1. make process</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_making_making_1.png" align="middle" alt="images/chapter_making_making_1.png" /></div></div></div><br class="figure-break" /><p>These scripts are invoked in this order:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+his output files.</p><div class="figure"><a id="id2906600"></a><p class="title"><b>Figure 2.1. make process</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/chapter_making_making_1.png" align="middle" alt="images/chapter_making_making_1.png" /></div></div></div><br class="figure-break" /><p>These scripts are invoked in this order:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
 scripts/put_ifndef_date.pl
 Generates includes/config.h with compilation time and version extracted from
 includes/config.h.in
@@ -10,7 +10,7 @@ includes/config.h.in
 scripts/check_directories.pl
 if any of this directories (out, test_out, .abidos) does not exist this script
 creates them.
-<a id="id2993116" class="indexterm"></a>
+<a id="id2907646" class="indexterm"></a>
 </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 out here is where some files created automatically are put. So far only
 generate_begin_graph.cpp is put here but in the future i want to put the output
@@ -28,12 +28,12 @@ files_output.dot
 /scripts/generate_begin_graph.pl
 generates generate_begin_graph.cpp and this file generates the header of
 files_output.dot with version of Abidos and fonts sizes of the graphs.
-<a id="id2988840" class="indexterm"></a>
+<a id="id2903370" class="indexterm"></a>
 </li><li class="listitem"><p class="simpara">
 scripts/bison_execute.pl
 from src/parser.y generates:
-<a id="id2996250" class="indexterm"></a>
-<a id="id2963912" class="indexterm"></a>
+<a id="id2910780" class="indexterm"></a>
+<a id="id2878443" class="indexterm"></a>
 </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 src/parser.c this file is no used to compile
 Abidos directly but from this file some things are extracted.
@@ -52,12 +52,12 @@ nodes of trace tree, trace tree is an output of the trace system of Abidos this
 system can generate kind of trees to show how the syntactic rules are used and
 there are nodes with <span class="strong"><strong>token is</strong></span> and <span class="strong"><strong>token is not</strong></span> entries where you can see
 what tokens are processed that will be explained deeply in the trace chapter.
-<a id="id2981504" class="indexterm"></a>
+<a id="id2896034" class="indexterm"></a>
 </li><li class="listitem">
 yytokens_short: static const char \*const yytokens_short[]
 It is similar than the previous table but when the token is an ASCII symbol,
 we can read 36Th ASCII symbol like this "36→$".
-<a id="id2998368" class="indexterm"></a>
+<a id="id2912898" class="indexterm"></a>
 </li></ul></div></li><li class="listitem">
 scripts/flex_execute.pl
 Parses src/lexer.l and generates src/lexer.c (this file uses parser.h generates
