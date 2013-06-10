@@ -6,7 +6,7 @@ that this rules are working correctly, this means:</p><div class="itemizedlist">
 UML diagram, it is a hand made test; check the UML output of the test that
 the testing process generated, for example to check the diagram of the previous
 file:
-</li></ul></div><pre class="screen">xdot_run.py test_out/out_t001.cpp.dot</pre><p>And you will see this diagram:</p><div class="figure"><a id="id2864183"></a><p class="title"><b>Figure 11.2. out_t001.cpp.dot</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+</li></ul></div><pre class="screen">xdot_run.py test_out/out_t001.cpp.dot</pre><p>And you will see this diagram:</p><div class="figure"><a id="id3057173"></a><p class="title"><b>Figure 11.2. out_t001.cpp.dot</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_testing_out_t001.cpp.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -100,8 +100,8 @@ classes and there is A.
 </p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 Abidos generates another useful file for each cpp test file trace tree, in
 this file we can see the rules executes by Abidos.
-<a id="id2864330" class="indexterm"></a>
-</li></ul></div><div class="figure"><a id="id2864342"></a><p class="title"><b>Figure 11.3. trace_t001.cpp_pruned.gv</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+<a id="id3057320" class="indexterm"></a>
+</li></ul></div><div class="figure"><a id="id3057332"></a><p class="title"><b>Figure 11.3. trace_t001.cpp_pruned.gv</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_testing_trace_t001.cpp_pruned.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -714,7 +714,7 @@ this file we can see the rules executes by Abidos.
 make test_run is executed.</p><p>One example is <span class="strong"><strong>test_out/trace_t001.cpp_pruned.gv</strong></span>, you can read more about this
 in the chapter trace, trace component is the part of Abidos that generates
 annotated parse trees.</p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>You can see the version without pruning if you need more detailed history of the
-syntactic rules used in the cpp file, just open <span class="strong"><strong>test_out/trace_t001.cpp.gv</strong></span>.</p></td></tr></table></div><p><a id="id2864408" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+syntactic rules used in the cpp file, just open <span class="strong"><strong>test_out/trace_t001.cpp.gv</strong></span>.</p></td></tr></table></div><p><a id="id3057398" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 Abidos must consume all the tokens scanned in the test file, when Abidos is
 called from the test_run script <span class="strong"><strong>scripts/tests_run.pl</strong></span> the call is like this:
 </li></ul></div><pre class="screen">  /.../processor/src/abidos \
