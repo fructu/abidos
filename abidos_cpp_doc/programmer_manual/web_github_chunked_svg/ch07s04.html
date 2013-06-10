@@ -18,14 +18,14 @@ symbols table it would returns the related class.
 </p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 token_get()
 </li></ul></div><p>First we need see the pseudo-code of token_get():
-<a id="id3054956" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>int</strong></span> token_get()
+<a id="id2648086" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>int</strong></span> token_get()
 {
   <span class="strong"><strong>return</strong></span> tokens_vector[context.i_token].id;
 }</pre><p>We can see that the <span class="strong"><strong>context.i_token</strong></span> points to the actual token in this state
 or node in the syntax tree.</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 token_next()
 </li></ul></div><p>The pseudo-code of token_next is:
-<a id="id3055005" class="indexterm"></a></p><pre class="screen">token_next()
+<a id="id2648136" class="indexterm"></a></p><pre class="screen">token_next()
 {
   <span class="strong"><strong>if</strong></span>( context.i_token &lt; tokens_vector.size() ) {
     ++context.i_token;
@@ -63,7 +63,7 @@ put in the string attribute <span class="strong"><strong>colon_colon_chain</stro
 like <span class="strong"><strong>A::B</strong></span> uses in check_identifier().
 </p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 drop_head_namespace()
-</li></ul></div><p><a id="id3055157" class="indexterm"></a></p><p>when we have something like:</p><pre class="screen"><span class="strong"><strong>using</strong></span> <span class="strong"><strong>namespace</strong></span> N;
+</li></ul></div><p><a id="id2648287" class="indexterm"></a></p><p>when we have something like:</p><pre class="screen"><span class="strong"><strong>using</strong></span> <span class="strong"><strong>namespace</strong></span> N;
 
 <span class="strong"><strong>class</strong></span> B{
   C n1;
@@ -72,7 +72,7 @@ drop_head_namespace()
 in <span class="strong"><strong>void c_parser_descent::check_identifier()</strong></span>
 because N is in the vector <span class="strong"><strong>semantic.vector_using_namespace</strong></span></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>This will change in the future because is a work-around.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 check_identifier()
-</li></ul></div><p><a id="id3055230" class="indexterm"></a></p><p>Lexer not distinguish between IDENTIFIER and CLASS_NAME because lexer does not
+</li></ul></div><p><a id="id2648361" class="indexterm"></a></p><p>Lexer not distinguish between IDENTIFIER and CLASS_NAME because lexer does not
 check that with the symbols table therefore parser do it in this method.</p><pre class="screen">check_identifier()
 {
     <span class="strong"><strong>if</strong></span> ( 1 == identifier_search_with_type(tab, yytext, token) ) {
