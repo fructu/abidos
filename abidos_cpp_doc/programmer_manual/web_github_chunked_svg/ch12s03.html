@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>12.3. Templates instantiation</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12.html" title="Chapter 12. Advanced trace" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12s02.html" title="12.2. Templates" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12s02.html">Prev</a> </td><th width="60%" align="center"><a accesskey="r" href="https://github.com/fructu/abidos">github</a> </th><td width="20%" align="right"> </td></tr></table><hr /></div><div class="section" title="12.3. Templates instantiation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_templates_instantiation"></a>12.3. Templates instantiation</h2></div></div></div><p><a id="id2655723" class="indexterm"></a></p><p>Now lets see another example of template, this time we will see a class template
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>12.3. Templates instantiation</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12.html" title="Chapter 12. Advanced trace" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12s02.html" title="12.2. Templates" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12s02.html">Prev</a> </td><th width="60%" align="center"><a accesskey="r" href="https://github.com/fructu/abidos">github</a> </th><td width="20%" align="right"> </td></tr></table><hr /></div><div class="section" title="12.3. Templates instantiation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_templates_instantiation"></a>12.3. Templates instantiation</h2></div></div></div><p><a id="id2653948" class="indexterm"></a></p><p>Now lets see another example of template, this time we will see a class template
 instead of a function template and how it is instantiated in another class.</p><pre class="screen"><span class="strong"><strong>template</strong></span> &lt;<span class="strong"><strong>class</strong></span> T1&gt;
 <span class="strong"><strong>class</strong></span> A {
 };
@@ -9,7 +9,7 @@ instead of a function template and how it is instantiated in another class.</p><
   A&lt;<span class="strong"><strong>int</strong></span>&gt; a1; <a id="CO40-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
 };</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO40-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 here is the instantiation of template class <span class="strong"><strong>A</strong></span>.
-</p></td></tr></table></div><p>This is the subtree of <span class="strong"><strong>B</strong></span> parsing:</p><div class="figure"><a id="id2655800"></a><p class="title"><b>Figure 12.8. classes rules to parse B:</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+</p></td></tr></table></div><p>This is the subtree of <span class="strong"><strong>B</strong></span> parsing:</p><div class="figure"><a id="id2654025"></a><p class="title"><b>Figure 12.8. classes rules to parse B:</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_advanced_trace_book_template_class_01.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -300,7 +300,7 @@ here is the instantiation of template class <span class="strong"><strong>A</stro
 </svg>
 
 <!-- } extract of file[web_github_chunked_svg/images/chapter_advanced_trace_book_template_class_01.svg] end-->
-</div></div></div><br class="figure-break" /><p>In this sub tree we will see the part when <span class="strong"><strong>a1</strong></span> is parsed:</p><div class="figure"><a id="id2655836"></a><p class="title"><b>Figure 12.9. classes rules to parse B::a1:</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+</div></div></div><br class="figure-break" /><p>In this sub tree we will see the part when <span class="strong"><strong>a1</strong></span> is parsed:</p><div class="figure"><a id="id2654061"></a><p class="title"><b>Figure 12.9. classes rules to parse B::a1:</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_advanced_trace_book_template_class_01.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -627,8 +627,8 @@ simple_type_specifier():
 semantic.simple_type_specifier()
 </li></ul></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 template_instantiation_argument():
-</li></ul></div><p><a id="id2655991" class="indexterm"></a>
-<a id="id2656000" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span>
+</li></ul></div><p><a id="id2654216" class="indexterm"></a>
+<a id="id2654225" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span>
 c_semantic::template_instantiation_argument(c_context &amp; context, c_decl_specifier &amp; decl) <a id="CO41-1"></a><img src="images/icons/callouts/1.png" alt="1" border="0" />
 {
     ...
