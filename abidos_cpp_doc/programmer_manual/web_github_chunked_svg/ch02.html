@@ -7,58 +7,58 @@ When the DRY principle is applied successfully, a modification of any single
 element of a system does not require a change in other logically unrelated
 elements.</p></td><td width="10%" valign="top"> </td></tr><tr><td width="10%" valign="top"> </td><td colspan="2" align="right" valign="top">--<span class="attribution">
 <a class="ulink" href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself" target="_top">Andy Hunt and Dave Thomas</a>
-</span></td></tr></table></div><p><a id="id2975812" class="indexterm"></a></p><p>Abidos is an experiment about a set of technologies that i am trying to put
+</span></td></tr></table></div><p><a id="id2605056" class="indexterm"></a></p><p>Abidos is an experiment about a set of technologies that i am trying to put
 together in this project, working and learning a lot of interesting things.
-therefore lets go to see how the making process of Abidos is.</p><p><a id="id2973274" class="indexterm"></a></p><div class="section" title="2.1. Configuration"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration"></a>2.1. Configuration</h2></div></div></div><p>Abidos uses cmake <a class="ulink" href="http://www.cmake.org/" target="_top">http://www.cmake.org/</a> for this purpose.</p><div class="blockquote"><table border="0" width="100%" cellspacing="0" cellpadding="0" class="blockquote" summary="Block quote"><tr><td width="10%" valign="top"> </td><td width="80%" valign="top"><p>CMake is a family of tools designed to build, test and package software. CMake
+therefore lets go to see how the making process of Abidos is.</p><p><a id="id2602518" class="indexterm"></a></p><div class="section" title="2.1. Configuration"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration"></a>2.1. Configuration</h2></div></div></div><p>Abidos uses cmake <a class="ulink" href="http://www.cmake.org/" target="_top">http://www.cmake.org/</a> for this purpose.</p><div class="blockquote"><table border="0" width="100%" cellspacing="0" cellpadding="0" class="blockquote" summary="Block quote"><tr><td width="10%" valign="top"> </td><td width="80%" valign="top"><p>CMake is a family of tools designed to build, test and package software. CMake
 is used to control the software compilation process using simple platform and
 compiler independent configuration files. CMake generates native makefiles and
 workspaces that can be used in the compiler environment of your choice.</p></td><td width="10%" valign="top"> </td></tr><tr><td width="10%" valign="top"> </td><td colspan="2" align="right" valign="top">--<span class="attribution">
 <a class="ulink" href="http://www.cmake.org/" target="_top">cmake</a>
-</span></td></tr></table></div><p><a id="id2965267" class="indexterm"></a></p><p>To configure Abidos C++ write in a terminal:</p><pre class="screen">cd processor
+</span></td></tr></table></div><p><a id="id2594511" class="indexterm"></a></p><p>To configure Abidos C++ write in a terminal:</p><pre class="screen">cd processor
 cmake .</pre><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>You can see more about configure in the user manual.</p></td></tr></table></div><div class="section" title="2.1.1. processor/CMakeLists.txt"><div class="titlepage"><div><div><h3 class="title"><a id="_processor_cmakelists_txt"></a>2.1.1. processor/CMakeLists.txt</h3></div></div></div><p>Abidos sets here:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 his version
 </li><li class="listitem">
 the directories that make process should pass to the scripts.
-</li></ul></div><p>Then the others CMakeLists.txt are processed in order to generate the Makefile.</p><p><a id="id2991021" class="indexterm"></a>
-<a id="id2991204" class="indexterm"></a></p></div><div class="section" title="2.1.2. processor/src/CMakeLists.txt"><div class="titlepage"><div><div><h3 class="title"><a id="_processor_src_cmakelists_txt"></a>2.1.2. processor/src/CMakeLists.txt</h3></div></div></div><p>Here cmake process:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+</li></ul></div><p>Then the others CMakeLists.txt are processed in order to generate the Makefile.</p><p><a id="id2620264" class="indexterm"></a>
+<a id="id2620447" class="indexterm"></a></p></div><div class="section" title="2.1.2. processor/src/CMakeLists.txt"><div class="titlepage"><div><div><h3 class="title"><a id="_processor_src_cmakelists_txt"></a>2.1.2. processor/src/CMakeLists.txt</h3></div></div></div><p>Here cmake process:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 check if all necessary includes are installed in the system.
 </li><li class="listitem">
 check if Flex and Bison are installed in the system.
-<a id="id2983195" class="indexterm"></a>
-<a id="id2970692" class="indexterm"></a>
+<a id="id2612438" class="indexterm"></a>
+<a id="id2599935" class="indexterm"></a>
 </li></ul></div><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>Abidos do not use the code generated from Bison to do an ascent parser only use
 some declarations needed by Flex.</p></td></tr></table></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 sets the build options.
 </li></ul></div><p>generates rules for Makefile:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 calls flex_execute.pl.
-  <a id="id2973132" class="indexterm"></a>
+  <a id="id2602376" class="indexterm"></a>
 </li><li class="listitem">
 calls bison_execute.pl.
-  <a id="id2968549" class="indexterm"></a>
+  <a id="id2597793" class="indexterm"></a>
 </li><li class="listitem">
 to copy ts.cpp ts.h from preprocessor "a module used to
   scan files and generate graphs with the includes net and can be used to obtain
   a list with files and with includes"
 </li><li class="listitem">
 calls extract_symbols.pl.
-  <a id="id2981922" class="indexterm"></a>
+  <a id="id2611166" class="indexterm"></a>
 </li><li class="listitem">
 calls check_directories.pl and
   generate_begin_graph.pl.
-  <a id="id2961060" class="indexterm"></a>
-  <a id="id2975330" class="indexterm"></a>
+  <a id="id2590304" class="indexterm"></a>
+  <a id="id2604574" class="indexterm"></a>
 </li><li class="listitem">
 to compile and link Abidos.
-  <a id="id2974441" class="indexterm"></a>
-  <a id="id2992328" class="indexterm"></a>
+  <a id="id2603684" class="indexterm"></a>
+  <a id="id2621572" class="indexterm"></a>
 </li><li class="listitem">
 indent_run that calls
   check_indent.sh and indent_run.sh.
-  <a id="id2964798" class="indexterm"></a>
-  <a id="id2989646" class="indexterm"></a>
+  <a id="id2594042" class="indexterm"></a>
+  <a id="id2618889" class="indexterm"></a>
 </li><li class="listitem">
 test_run that calls tests_run.pl
-  <a id="id2972597" class="indexterm"></a>
+  <a id="id2601841" class="indexterm"></a>
 </li><li class="listitem">
 install Abidos.
 </li><li class="listitem">
