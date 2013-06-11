@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 12. Advanced trace</title><link rel="stylesheet" href="docbook-xsl.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.2" /><link rel="home" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="up" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/index.html" title="Abidos C++ Programmer Manual" /><link rel="prev" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch11s03.html" title="11.3. Test files and what they testing" /><link rel="next" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12s02.html" title="12.2. Templates" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch11s03.html">Prev</a> </td><th width="60%" align="center"><a accesskey="r" href="https://github.com/fructu/abidos">github</a> </th><td width="20%" align="right"> <a accesskey="n" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12s02.html">Next</a></td></tr></table><hr /></div><div class="chapter" title="Chapter 12. Advanced trace"><div class="titlepage"><div><div><h2 class="title"><a id="_advanced_trace"></a>Chapter 12. Advanced trace</h2></div></div></div><p>Now you have an idea about how Abidos works, we can start the explanation of
 the advanced issues. In this chapter we will see examples of C++ code and how
 Abidos deal with them using all the previous explained topics (trace trees,
-mangling, symbols table, …)</p><p><a id="id2650939" class="indexterm"></a></p><div class="section" title="12.1. Inner classes"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_inner_classes"></a>12.1. Inner classes</h2></div></div></div><p>When we have a class inside another class Abidos uses a mangling method to put
+mangling, symbols table, …)</p><p><a id="id2767129" class="indexterm"></a></p><div class="section" title="12.1. Inner classes"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_inner_classes"></a>12.1. Inner classes</h2></div></div></div><p>When we have a class inside another class Abidos uses a mangling method to put
 the classes in the symbol table, lets go to see the whole process with this
 example:</p><p title="abidos_cpp/processor$ vi test/book_inner_class_01.cpp"><b>abidos_cpp/processor$ vi test/book_inner_class_01.cpp. </b>
 </p><pre class="screen"><span class="strong"><strong>class</strong></span> A {
@@ -37,7 +37,7 @@ run --includes test_includes/ \
       &gt; test_out/out_book_inner_class_01.cpp.txt</pre><p title="X file for gdb">
 </p><p>Run gdb like this:</p><p title="gdb execution"><b>gdb execution. </b>
 </p><pre class="screen">abidos_cpp/processor$ gdb src/abidos_cpp -x X</pre><p title="gdb execution">
-</p><p>abidos uses the next rules to reach <span class="strong"><strong>A</strong></span>:</p><div class="figure"><a id="id2651090"></a><p class="title"><b>Figure 12.1. classes rules until A</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+</p><p>abidos uses the next rules to reach <span class="strong"><strong>A</strong></span>:</p><div class="figure"><a id="id2767280"></a><p class="title"><b>Figure 12.1. classes rules until A</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_advanced_trace_inner_classes_01.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -244,7 +244,7 @@ run --includes test_includes/ \
 in <span class="strong"><strong>class_key</strong></span> abidos set context:
 </li></ul></div><pre class="screen">        context.class_key = CLASS;</pre><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 in <span class="strong"><strong>class_head</strong></span> abidos set context:
-</li></ul></div><p><a id="id2651154" class="indexterm"></a></p><pre class="screen">    context.class_specifier_status = CLASS_SPECIFIER_STATUS_IDENTIFIER;
+</li></ul></div><p><a id="id2767344" class="indexterm"></a></p><pre class="screen">    context.class_specifier_status = CLASS_SPECIFIER_STATUS_IDENTIFIER;
 
     identifier_opt(trace_node);
 
@@ -263,8 +263,8 @@ called <span class="strong"><strong>c_semantic::identifier()</strong></span> and
 }</pre><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 semantic invokes his method <span class="strong"><strong>class_specifier_identifier()</strong></span> where the next
 code is executed:
-</li></ul></div><p><a id="id2651231" class="indexterm"></a>
-<a id="id2651239" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span>
+</li></ul></div><p><a id="id2767421" class="indexterm"></a>
+<a id="id2767429" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span>
 c_semantic::class_specifier_identifier(c_context &amp; context, c_token token)
 {
     <span class="strong"><strong>if</strong></span> (CLASS == context.class_key) {
@@ -285,7 +285,7 @@ with that abidos_cpp knows he is in the scope of <span class="strong"><strong>A<
 now abidos begin to use <span class="strong"><strong>member_specification_opt</strong></span> rule to parse inside of
 class <span class="strong"><strong>A</strong></span> while expand this subtree (i cut some rules in order to get an
 easy graph):
-</li></ul></div><div class="figure"><a id="id2651331"></a><p class="title"><b>Figure 12.2. inner classes rules until B</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+</li></ul></div><div class="figure"><a id="id2767521"></a><p class="title"><b>Figure 12.2. inner classes rules until B</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_advanced_trace_inner_classes_02.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -420,7 +420,7 @@ c_semantic::class_specifier_identifier(c_context &amp; context, c_token token)
 in <span class="strong"><strong>context.class_name_declaration</strong></span> too then abidos knows that he is inside
 of <span class="strong"><strong>A::B</strong></span> scope now.</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 here we continue with the last part parsing <span class="strong"><strong>f_b</strong></span> this is his subtree:
-</li></ul></div><div class="figure"><a id="id2651452"></a><p class="title"><b>Figure 12.3. inner classes rules declaration of f_b</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+</li></ul></div><div class="figure"><a id="id2767641"></a><p class="title"><b>Figure 12.3. inner classes rules declaration of f_b</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_advanced_trace_inner_classes_03.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -814,7 +814,7 @@ here we continue with the last part parsing <span class="strong"><strong>f_b</st
 </div></div></div><br class="figure-break" /><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 first in this subtree we can see in <span class="strong"><strong>_74_simple_type_specifier</strong></span> how <span class="strong"><strong>void</strong></span> is
 processed:
-</li></ul></div><p><a id="semantic_decls"></a><a id="id2651503" class="indexterm"></a></p><p><a id="id2651513" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::simple_type_specifier(c_trace_node trace_node)
+</li></ul></div><p><a id="semantic_decls"></a><a id="id2767693" class="indexterm"></a></p><p><a id="id2767703" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::simple_type_specifier(c_trace_node trace_node)
 {
     ...
     <span class="strong"><strong>const</strong></span> <span class="strong"><strong>int</strong></span> vector_id[]={
@@ -851,8 +851,8 @@ processed:
 semantic stores the decls in this case <span class="strong"><strong>void</strong></span>.
 </p></td></tr></table></div><p>If abidos needs to store decls of parameters → then abidos stores them
 in context.
-<a class="link" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12.html">context decls</a>.</p><p><a id="id2651641" class="indexterm"></a>
-<a id="id2651649" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<a class="link" href="http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_svg/ch12.html">context decls</a>.</p><p><a id="id2767831" class="indexterm"></a>
+<a id="id2767839" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 abidos runs member_declaration() → … direct_declarator() → … &gt;
 identifier(): reads <span class="strong"><strong>"f_b"</strong></span> and calls <span class="strong"><strong>c_semantic::identifier()</strong></span>
 in this method, due to the <span class="strong"><strong>context</strong></span> abidos enters in this <span class="strong"><strong>if</strong></span>:
@@ -886,7 +886,7 @@ is an struct or a class or a namespace.
 </li><li class="listitem">
 stores that information in <span class="strong"><strong>context.class_member</strong></span>:
 </li></ul></div></li></ul></div><pre class="screen">    class_member.access_specifier = context.access_specifier;
-    context.class_member = class_member;</pre><p>and calls semantic.identifier():</p><p><a id="id2651819" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::identifier(c_context &amp; context, c_token token)
+    context.class_member = class_member;</pre><p>and calls semantic.identifier():</p><p><a id="id2768009" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::identifier(c_context &amp; context, c_token token)
 {
     ...
 
@@ -907,7 +907,7 @@ stores that information in <span class="strong"><strong>context.class_member</st
 }</pre><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>Until now abidos knows it is in "A::B" scope and identifier of method is "f_b"
 but this identifier is not enough because there can be more methods inside of
 the same scope with the same identifier therefore abidos needs mangling the name
-with the types of parameters of the method.</p></td></tr></table></div><p>in semantic::class_member_declarator():</p><p><a id="id2651879" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span>
+with the types of parameters of the method.</p></td></tr></table></div><p>in semantic::class_member_declarator():</p><p><a id="id2768069" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span>
 c_semantic::class_member_declarator(c_context &amp; context, c_token token)
 {
   ...
@@ -936,7 +936,7 @@ context.class_member.token "f_b" but abidos needs to know the parameters to
 mangling the full name of this method
 </li></ul></div><p><a id="parameter_1"></a>first calls the rules decl_specifier_seq → decl_specifier →
 type_specifier → simple_type_specifier and here in context is actualized
-with the types of "f_b(TYPES)":</p><p><a id="id2651970" class="indexterm"></a></p><p><a id="id2651980" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::simple_type_specifier(c_trace_node trace_node)
+with the types of "f_b(TYPES)":</p><p><a id="id2768160" class="indexterm"></a></p><p><a id="id2768170" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::simple_type_specifier(c_trace_node trace_node)
 {
    ...
        <span class="strong"><strong>if</strong></span> (1 == context.i_am_in_parameter_declaration) {
@@ -957,7 +957,7 @@ is called again :</p><pre class="screen"><span class="strong"><strong>int</stron
     }
 
   ...
-}</pre><p><a id="id2652072" class="indexterm"></a></p><p>in semantic.identifier the next code runs:</p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::identifier(c_context &amp; context, c_token token)
+}</pre><p><a id="id2768262" class="indexterm"></a></p><p>in semantic.identifier the next code runs:</p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::identifier(c_context &amp; context, c_token token)
 {
   ...
     <span class="strong"><strong>if</strong></span> (CLASS_SPECIFIER_STATUS_MEMBER_DECLARATOR ==
@@ -970,7 +970,7 @@ is called again :</p><pre class="screen"><span class="strong"><strong>int</stron
         ...
     }
   ...
-}</pre><p><a id="id2652121" class="indexterm"></a></p><p>in c_semantic::member_param_declarator, by the context
+}</pre><p><a id="id2768311" class="indexterm"></a></p><p>in c_semantic::member_param_declarator, by the context
 (context.class_specifier_status) abidos knows is in
 CLASS_SPECIFIER_STATUS_MEMBER_DECLARATOR state and executes the next code</p><pre class="screen"><span class="strong"><strong>void</strong></span>
 c_semantic::member_param_declarator(c_context &amp; context, c_token token)
@@ -1004,7 +1004,7 @@ where the whole mangling name of the method can be established:
         <span class="emphasis"><em>//SEMICOLON_opt(trace_node);</em></span>
         semantic.declarator_insert(trace_node.get_tab(), context);
     ...
-}</pre><p><a id="id2652239" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+}</pre><p><a id="id2768429" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 c_semantic::declarator_insert(): here abidos has all components to
 set the mangled name of the method → "f_b(void)":
 </li></ul></div><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::declarator_insert(string tab, c_context &amp; context)
@@ -1012,7 +1012,7 @@ set the mangled name of the method → "f_b(void)":
   ...
     member_insert(tab, context);
   ...
-}</pre><p><a id="id2652276" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+}</pre><p><a id="id2768466" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 c_semantic::member_insert(): in this method semantic stores the function
 member <span class="strong"><strong>f_b</strong></span> mangled like <span class="strong"><strong>f_b(void)</strong></span>:
 </li></ul></div><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::member_insert(string &amp; tab, c_context &amp; context)
@@ -1036,7 +1036,7 @@ member <span class="strong"><strong>f_b</strong></span> mangled like <span class
     map_class_member[member.get_full_name()] = member;
     vector_class_member.push_back(&amp;map_class_member
                                   [member.get_full_name()]);
-}</pre><p><a id="id2652366" class="indexterm"></a></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>Abidos can not stores the function when <span class="strong"><strong>f_b</strong></span> is reached because due to the
+}</pre><p><a id="id2768556" class="indexterm"></a></p><div class="note" title="Note" style="margin-left: 0; margin-right: 10%;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/icons/note.png" /></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>Abidos can not stores the function when <span class="strong"><strong>f_b</strong></span> is reached because due to the
 polymorphic nature of C++ abidos must parses inside <span class="strong"><strong>"("</strong></span> <span class="strong"><strong>")"</strong></span> in order to
 compose a name to store <span class="strong"><strong>f_b</strong></span> and have not problems if other <span class="strong"><strong>f_b</strong></span> with other
 parameters appears in the same scope in this case in the same class.</p></td></tr></table></div><p>symbols table has this information:</p><pre class="screen">c_symbols_table::print
@@ -1075,7 +1075,7 @@ abidos has backtracking the environment is restored before parser descent
 through function_definition.
 </li></ul></div><p>Now we will see how the definition of <span class="strong"><strong>A::B::f_b</strong></span> is parsed:</p><pre class="screen"><span class="strong"><strong>void</strong></span> A::B::f_b(<span class="strong"><strong>void</strong></span>)
 {
-}</pre><div class="figure"><a id="id2652543"></a><p class="title"><b>Figure 12.4. inner classes rules definition of f_b</b></p><div class="figure-contents"><div class="mediaobject" align="center">
+}</pre><div class="figure"><a id="id2768733"></a><p class="title"><b>Figure 12.4. inner classes rules definition of f_b</b></p><div class="figure-contents"><div class="mediaobject" align="center">
 <!-- extract of file[web_github_chunked_svg/images/chapter_advanced_trace_inner_classes_04.svg] {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
@@ -1512,7 +1512,7 @@ context.class_name_declaration CAN BE USED INSTEAD OF IT.</p></td></tr></table><
 from <span class="strong"><strong>c_parser_descent::identifier parser</strong></span>
 calls <span class="strong"><strong>c_semantic::check_coloncolon_member_function</strong></span> in this function abidos
 enters in this <span class="strong"><strong>if</strong></span>:
-</li></ul></div><p><a id="id2652649" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::check_coloncolon_member_function(c_context &amp; context, c_token token)
+</li></ul></div><p><a id="id2768839" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::check_coloncolon_member_function(c_context &amp; context, c_token token)
 {
     ...
 
@@ -1564,14 +1564,14 @@ abidos needs to mangling the name of the method for now abidos only knows that
 it is in the scope of <span class="strong"><strong>"A::B"</strong></span> and abidos is in the definition of a method with
 a mangling name starting with <span class="strong"><strong>f_b</strong></span>
 therefore <span class="strong"><strong>c_parser_descent::parameter_declaration</strong></span>  calls:
-</li></ul></div><p><a id="id2652898" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::declarator_insert(string tab, c_context &amp; context)
+</li></ul></div><p><a id="id2769088" class="indexterm"></a></p><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::declarator_insert(string tab, c_context &amp; context)
 {
       ...
             <span class="strong"><strong>if</strong></span> (CLASS_SPECIFIER_STATUS_MEMBER_DECLARATOR ==
                 <span class="strong"><strong>if</strong></span> (1 == context.i_am_in_parameter_declaration) {
                     member_param_declarator(context, token);
       ...
-}</pre><p><a id="id2652936" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+}</pre><p><a id="id2769126" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 in <span class="strong"><strong>member_param_declarator</strong></span> the next line is executed:
 </li></ul></div><pre class="screen"><span class="strong"><strong>void</strong></span>
 c_semantic::member_param_declarator(c_context &amp; context, c_token token)
@@ -1582,7 +1582,7 @@ c_semantic::member_param_declarator(c_context &amp; context, c_token token)
 }</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#CO34-1"><img src="images/icons/callouts/1.png" alt="1" border="0" /></a> </p></td><td valign="top" align="left"><p>
 this is how context get knowledge about the name and the parameters of the
 actual method.
-</p></td></tr></table></div><p><a id="id2652996" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+</p></td></tr></table></div><p><a id="id2769185" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 in <span class="strong"><strong>c_parser_descent::declaration</strong></span> is executed the next code:
 </li></ul></div><pre class="screen"><span class="strong"><strong>int</strong></span> c_parser_descent::declaration(c_trace_node trace_node)
 {
@@ -1595,7 +1595,7 @@ in <span class="strong"><strong>c_parser_descent::declaration</strong></span> is
     }
 }</pre><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 semantic.declarator_insert
-</li></ul></div><p><a id="id2653062" class="indexterm"></a></p><p><a id="full_name_definition"></a><a id="id2653074" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+</li></ul></div><p><a id="id2769252" class="indexterm"></a></p><p><a id="full_name_definition"></a><a id="id2769264" class="indexterm"></a></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 member_insert here the next code is executed:
 </li></ul></div><pre class="screen"><span class="strong"><strong>void</strong></span> c_semantic::member_insert(string &amp; tab, c_context &amp; context)
     ...
