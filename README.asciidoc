@@ -16,9 +16,9 @@ abidos_cpp and there is documentation in abidos_cpp_doc.
 
 ** programmer manual web (no svg pictures): http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/programmer_manual/web_github_chunked_png/index.html[programmer manual web (no svg pictures)]
 
-** user manual pdf: https://github.com/fructu/abidos/raw/master/abidos_cpp_doc/user_manual/pdf/abidos_cpp_user_manual_draft_0.02.pdf
+** user manual pdf: https://github.com/fructu/abidos/raw/master/abidos_cpp_doc/user_manual/pdf/abidos_cpp_user_manual_draft_0.02.pdf[abidos_cpp_user_manual_draft_0.02.pdf]
 
-** programmer manual pdf: https://github.com/fructu/abidos/raw/master/abidos_cpp_doc/programmer_manual/pdf/abidos_cpp_programmer_manual_draft_0.03.pdf
+** programmer manual pdf: https://github.com/fructu/abidos/raw/master/abidos_cpp_doc/programmer_manual/pdf/abidos_cpp_programmer_manual_draft_0.03.pdf[abidos_cpp_programmer_manual_draft_0.03.pdf]
 
 ** man pages: http://htmlpreview.github.com/?https://github.com/fructu/abidos/blob/master/abidos_cpp_doc/linux_man/abidos_cpp.1.html[man pages] 
 
